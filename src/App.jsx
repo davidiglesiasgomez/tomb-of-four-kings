@@ -15,9 +15,45 @@ function App() {
   const [antorchas, setAntorchas] = useState(antorchas_iniciales)
   const [turnos, setTurnos] = useState([])
   const [contador, setContador] = useState(0)
-  // const [turno, setTurno] = useState([])
+  const [turnoActual, setTurnoActual] = useState([])
   const [mano, setMano] = useState([])
-  const [ultima_carta, setUltimaCarta] = useState('&nbsp;')
+  const [ultimaCarta, setUltimaCarta] = useState('&nbsp;')
+
+  const tipoCarta = (carta) => {
+    if (carta === 'Jk') {
+      return 'Pergamino de luz'
+    }
+    if (carta === 'J♠') {
+      return 'Volverse berseker';
+    }
+    if (carta === 'J♣') {
+      return 'Abrir cerradura';
+    }
+    if (carta === 'J♥') {
+      return 'Esquivar golpe';
+    }
+    let valor = carta.slice(0, -1)
+    let palo = carta.slice(-1)
+    if (valor === 'A') {
+      return `Antorcha ${palo}`
+    }
+    if (valor === 'K') {
+      return `Tesoro ${palo}`
+    }
+    if (valor === 'Q') {
+      return `Favor divino ${palo}`
+    }
+    if (palo === '♦') {
+      return `Monstruo ${valor}`
+    }
+    if (palo === '♠') {
+      return `Trampa ${valor}`
+    }
+    if (palo === '♣') {
+      return `Puerta cerrada ${valor}`
+    }
+    return '';
+  }
 
   const handleGame = () => {
     console.log('game')
@@ -86,7 +122,7 @@ function App() {
           Deck
         </button>
         <button>
-          {ultima_carta}
+          {ultimaCarta} {tipoCarta(ultimaCarta)}
         </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
