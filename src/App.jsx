@@ -26,6 +26,7 @@ function App() {
   const [favorDivino, setFavorDivino] = useState(false)
   const [puntosVida, setPuntosVida] = useState(10)
   const [mensaje, setMensaje] = useState('')
+  const [retornar, setRetornar] = useState(0)
 
   const continuarTurno = () => {
     setMensaje(mensaje => mensaje + `. Continua el turno...`)
@@ -227,6 +228,37 @@ function App() {
     setMensaje(`No tiene sentido usar esa carta`)
   }
 
+  const handleRetornar = () => {
+    if (contador <= 1 && turnoActual.length === 0) {
+      setMensaje(`No puedes retornar porque acabas de empezar`)
+      return
+    }
+    if (turnoActual.length !== 0 || encuentro !== '' || desafio !== 0 || accion !== 0) {
+      setMensaje(`No puedes retornar porque estás en medio de un turno`)
+      return
+    }
+    setMensaje(`Empiezas el retorno`)
+    setRetornar(contador)
+  }
+
+  const handleResetear = () => {
+    setMensaje(`Resetear`)
+    setBaraja(baraja_inicial)
+    setAntorchas([])
+    setTurnos([])
+    setContador(0)
+    setTurnoActual([])
+    setMano([])
+    setEncuentro('')
+    setDesafio(0)
+    setAccion(0)
+    setUltimaCarta(null)
+    setFavorDivino(false)
+    setPuntosVida(10)
+    setMensaje('')
+    setRetornar(0)
+  }
+
   return (
     <>
       <h1 className="text-3xl font-bold underline">Tomb of Four Kings</h1>
@@ -235,7 +267,7 @@ function App() {
         <Turnos turnos={turnos} />
         <Mano mano={mano} handleCarta={handleCarta} />
         { false && <TurnoActual turnoActual={turnoActual} /> }
-        <Control handleGame={handleGame} ultimaCarta={ultimaCarta} mensaje={mensaje} accion={accion} puntosVida={puntosVida} />
+        <Control handleGame={handleGame} handleRetornar={handleRetornar} handleResetear={handleResetear} ultimaCarta={ultimaCarta} mensaje={mensaje} puntosVida={puntosVida} />
       </div>
     </>
   )

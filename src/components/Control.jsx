@@ -2,7 +2,7 @@ import { Carta } from "../components/Carta"
 import { puntosVidaCarta } from "../utils"
 import { PropTypes } from 'prop-types'
 
-export const Control = ({ handleGame, ultimaCarta, mensaje, accion, puntosVida }) => {
+export const Control = ({ handleGame, handleRetornar, handleResetear, ultimaCarta, mensaje, puntosVida }) => {
   return (
     <>
       <div className="inline-block">
@@ -17,6 +17,12 @@ export const Control = ({ handleGame, ultimaCarta, mensaje, accion, puntosVida }
         </div>
         )
       }
+      <button className="mr-1" onClick={handleRetornar}>
+        Retornar
+      </button>
+      <button className="mr-1" onClick={handleResetear}>
+        Resetear
+      </button>
       <p className="mensaje">
         {mensaje}
       </p>
@@ -26,8 +32,9 @@ export const Control = ({ handleGame, ultimaCarta, mensaje, accion, puntosVida }
 
 Control.propTypes = {
   handleGame: PropTypes.func,
+  handleRetornar: PropTypes.func,
+  handleResetear: PropTypes.func,
   ultimaCarta: PropTypes.string,
   mensaje: PropTypes.string,
-  accion: PropTypes.number,
   puntosVida: PropTypes.number
 }
