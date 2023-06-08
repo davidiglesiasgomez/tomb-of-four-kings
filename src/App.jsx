@@ -30,7 +30,6 @@ function App() {
   const [favorDivino, setFavorDivino] = useState(false)
   const [puntosVida, setPuntosVida] = useState(10)
   const [mensaje, setMensaje] = useState('')
-  const [esquivarGolpe, setEsquivarGolpe] = useState(false)
 
   const continuarTurno = () => {
     setMensaje(mensaje => mensaje + `. Continua el turno...`)
@@ -65,19 +64,6 @@ function App() {
     setAntorchas(temp)
   }
 
-  const perderPuntosVida = (puntos) => {
-    console.log('perderPuntosVida', 'puntos', puntos)
-    console.log('perderPuntosVida', 'esquivarGolpe', esquivarGolpe)
-    console.log('perderPuntosVida', 'accion', accion)
-    if (esquivarGolpe) {
-      setEsquivarGolpe(false)
-      setAccion(0)
-      return
-    }
-    setPuntosVida(puntosVida => puntosVida - puntos)
-    setAccion(0)
-  }
-
   const handleGame = () => {
     let temp = null
 
@@ -86,14 +72,14 @@ function App() {
       return
     }
 
-    console.log('handleGame', 'ultimaCarta', ultimaCarta)
-    console.log('handleGame', 'contador', contador)
-    console.log('handleGame', 'encuentro', encuentro)
-    console.log('handleGame', 'desafio', desafio)
-    console.log('handleGame', 'accion', accion)
+    // console.log('handleGame', 'ultimaCarta', ultimaCarta)
+    // console.log('handleGame', 'contador', contador)
+    // console.log('handleGame', 'encuentro', encuentro)
+    // console.log('handleGame', 'desafio', desafio)
+    // console.log('handleGame', 'accion', accion)
 
     if (encuentro !== '' && (accion !== 0 || favorDivino)) {
-        console.log(`Tenemos encuentro y accion`)
+        // console.log(`Tenemos encuentro y accion`)
         if (encuentro.includes('monstruo')) {
             if (desafio<=accion || favorDivino) {
                 setMensaje(`Maté al monstruo` + ( favorDivino ? ` por favor divino` : `` ))
@@ -101,7 +87,7 @@ function App() {
                 terminarTurno()
             } else {
                 setMensaje(`El monstruo me atacó y perdí ${desafio-accion} puntos de vida`)
-                perderPuntosVida(desafio - accion)
+                setPuntosVida(puntosVida => puntosVida - desafio + accion)
                 continuarTurno()
             }
         }
@@ -112,7 +98,7 @@ function App() {
                 terminarTurno()
             } else {
                 setMensaje(`Se activó la trampa y perdí ${desafio-accion} puntos de vida`)
-                perderPuntosVida(desafio - accion)
+                setPuntosVida(puntosVida => puntosVida - desafio + accion)
                 terminarTurno()
             }
         }
@@ -225,9 +211,7 @@ function App() {
         setMensaje(`No me hago daño con mi habilidad especial de esquivar golpe`)
         setMano(mano => mano.filter(item => item !== 'J♥'))
         // setTurnos(turnos => turnos[contador].concat('J♥'))
-        // recogerTesoro()
-        // terminarTurno()
-        setEsquivarGolpe(true)
+        setAccion(0)
         return
     }
     setMensaje(`No tiene sentido usar esa carta`)
