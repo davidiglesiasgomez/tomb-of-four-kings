@@ -93,3 +93,8 @@ export const esCartaDeValor = (carta) => {
   let palo = carta.slice(-1)
   return ( ['2', '3', '4', '5', '6', '7', '8', '9', '10'].includes(valor) && '♦' === palo ? true : false )
 }
+
+export const puntosVidaCarta = (puntos) => {
+  let cartas = ['', '', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥']
+  return cartas[puntos] ?? ''
+}

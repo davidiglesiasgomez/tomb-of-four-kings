@@ -12,10 +12,6 @@ const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', 
 'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
 '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
 
-// const puntos_vida_iniciales = ['10♥', '9♥', '8♥', '7♥', '6♥', '5♥', '4♥', '3♥', '2♥']
-
-// const antorchas_iniciales = ['1♥', '1♦', '1♣', '1♠']
-
 function App() {
   const [baraja, setBaraja] = useState(baraja_inicial)
   const [antorchas, setAntorchas] = useState([])

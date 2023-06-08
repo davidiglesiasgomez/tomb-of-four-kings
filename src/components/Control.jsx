@@ -1,11 +1,15 @@
 import { Carta } from "../components/Carta"
+import { puntosVidaCarta } from "../utils"
 import { PropTypes } from 'prop-types'
 
 export const Control = ({ handleGame, ultimaCarta, mensaje, accion, puntosVida }) => {
   return (
     <>
+      <div className="inline-block">
+        <Carta carta={puntosVidaCarta(puntosVida)} />
+      </div>
       <button onClick={handleGame}>
-        Baraja
+        Mazo
       </button>
       { ultimaCarta && (
         <div className="inline-block">
@@ -15,12 +19,6 @@ export const Control = ({ handleGame, ultimaCarta, mensaje, accion, puntosVida }
       }
       <p className="mensaje">
         {mensaje}
-      </p>
-      <p className="text-gray-300">
-        Accion: {accion}
-      </p>
-      <p className="text-gray-300">
-        Puntos de vida: {puntosVida}
       </p>
     </>
   )
