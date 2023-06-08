@@ -22,5 +22,5 @@ export const Mano = ({ mano, handleCarta }) => {
 
 Mano.propTypes = {
   mano: PropTypes.array,
-  handleCarta: PropTypes.function
+  handleCarta: PropTypes.func
 }

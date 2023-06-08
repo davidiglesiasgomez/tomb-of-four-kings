@@ -15,5 +15,5 @@ export const Carta = ({ carta, handleClick }) => {
 
 Carta.propTypes = {
   carta: PropTypes.string,
-  handleClick: PropTypes.function
+  handleClick: PropTypes.func
 }

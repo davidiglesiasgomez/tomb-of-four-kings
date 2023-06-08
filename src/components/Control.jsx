@@ -27,9 +27,9 @@ export const Control = ({ handleGame, ultimaCarta, mensaje, accion, puntosVida }
 }
 
 Control.propTypes = {
-  handleGame: PropTypes.function,
+  handleGame: PropTypes.func,
   ultimaCarta: PropTypes.string,
   mensaje: PropTypes.string,
-  accion: PropTypes.int,
-  puntosVida: PropTypes.int
+  accion: PropTypes.number,
+  puntosVida: PropTypes.number
 }
