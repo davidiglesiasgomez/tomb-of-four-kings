@@ -64,6 +64,15 @@ function App() {
     setAntorchas(temp)
   }
 
+  const pasarCartaAlTurno = (carta) => {
+    let temp = [...turnos]
+    if (typeof temp[contador] === 'undefined') {
+      temp[contador] = []
+    }
+    temp[contador].push(carta)
+    setTurnos(temp)
+  }
+
   const handleGame = () => {
     let temp = null
 
@@ -108,7 +117,7 @@ function App() {
                 recogerTesoro()
                 terminarTurno()
             } else {
-                setMensaje(`No pude abrir la puerta`)
+                setMensaje(`No pude abrir la puerta. Se descartan ${desafio - accion} cartas`)
                 descartarCartas(desafio - accion)
                 terminarTurno()
             }
@@ -168,12 +177,7 @@ function App() {
     temp.push(carta)
     setTurnoActual(temp)
 
-    temp = [...turnos]
-    if (typeof temp[contador] === 'undefined') {
-      temp[contador] = []
-    }
-    temp[contador].push(carta)
-    setTurnos(temp)
+    pasarCartaAlTurno(carta)
   }
 
   const handleCarta = (carta) => {
@@ -185,32 +189,32 @@ function App() {
 
     if (carta === 'J♠' && encuentro.includes('monstruo')) {
         setMensaje(`Mato al monstruo con mi habilidad especial de volverse berseker`)
-        setMano(mano => mano.filter(item => item !== 'J♠'))
-        // setTurnos(turnos => turnos[contador].concat('J♠'))
+        setMano(mano => mano.filter(item => item !== carta))
+        pasarCartaAlTurno(carta)
         recogerTesoro()
         terminarTurno()
         return
     }
     if (carta === 'J♦' && encuentro.includes('trampa')) {
         setMensaje(`Desactivo el mecanismo con mi habilidad especial de desactivar trampas`)
-        setMano(mano => mano.filter(item => item !== 'J♦'))
-        // setTurnos(turnos => turnos[contador].concat('J♦'))
+        setMano(mano => mano.filter(item => item !== carta))
+        pasarCartaAlTurno(carta)
         recogerTesoro()
         terminarTurno()
         return
     }
     if (carta === 'J♣' && encuentro.includes('puerta cerrada')) {
         setMensaje(`Abro la puerta con mi habilidad especial de abrir cerraduras`)
-        setMano(mano => mano.filter(item => item !== 'J♣'))
-        // setTurnos(turnos => turnos[contador].concat('J♣'))
+        setMano(mano => mano.filter(item => item !== carta))
+        pasarCartaAlTurno(carta)
         recogerTesoro()
         terminarTurno()
         return
     }
     if (carta === 'J♥' && (encuentro.includes('monstruo') || encuentro.includes('trampa'))) {
         setMensaje(`No me hago daño con mi habilidad especial de esquivar golpe`)
-        setMano(mano => mano.filter(item => item !== 'J♥'))
-        // setTurnos(turnos => turnos[contador].concat('J♥'))
+        setMano(mano => mano.filter(item => item !== carta))
+        pasarCartaAlTurno(carta)
         setAccion(0)
         return
     }
