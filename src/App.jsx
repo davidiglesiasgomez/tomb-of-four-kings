@@ -48,13 +48,11 @@ function App() {
   }
 
   const recogerTesoro = () => {
-    // console.log('recogerTesoro', 'turnoActual', turnoActual)
     let tesoros = turnoActual.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
-    // console.log('recogerTesoro', 'tesoros', tesoros)
-    console.log('recogerTesoro', 'comprobar que queda por lo menos 1 carta, si no hay que descartar el de menor valor')
-    // if () {
-
-    // }
+    if (tesoros.length === turnoActual.length) {
+        tesoros.sort((a, b) => valorCarta(a) - valorCarta(b))
+        tesoros.shift()
+    }
     setMano(mano => mano.concat(tesoros))
   }
 
@@ -83,16 +81,16 @@ function App() {
   const handleGame = () => {
     let temp = null
 
+    if (puntosVida < 2) {
+      setMensaje(`Has muerto. Has perdido`)
+      return
+    }
+
     console.log('handleGame', 'ultimaCarta', ultimaCarta)
     console.log('handleGame', 'contador', contador)
     console.log('handleGame', 'encuentro', encuentro)
     console.log('handleGame', 'desafio', desafio)
     console.log('handleGame', 'accion', accion)
-
-    if (puntosVida < 2) {
-      setMensaje(`Has muerto. Has perdido`)
-      return
-    }
 
     if (encuentro !== '' && (accion !== 0 || favorDivino)) {
         console.log(`Tenemos encuentro y accion`)
@@ -139,9 +137,6 @@ function App() {
     setUltimaCarta(carta)
 
     let valor = parseInt(carta.slice(0, -1))
-    // let palo = carta.slice(-1)
-    // console.log('valor', valor)
-    // console.log('palo', palo)
 
     let guardarCarta = true
 
@@ -198,11 +193,10 @@ function App() {
   const handleCarta = (carta) => {
 
     if (puntosVida < 2) {
-      setMensaje(`Acabas de morir. Has perdido`)
+      setMensaje(`Has muerto. Has perdido`)
       return
     }
 
-    console.log('handleCarta', carta)
     if (carta === 'J♠' && encuentro.includes('monstruo')) {
         setMensaje(`Mato al monstruo con mi habilidad especial de volverse berseker`)
         setMano(mano => mano.filter(item => item !== 'J♠'))
