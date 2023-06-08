@@ -181,6 +181,12 @@ function App() {
   }
 
   const handleCarta = (carta) => {
+    console.log('handleCarta', 'carta', carta)
+    console.log('handleCarta', 'encuentro', encuentro)
+    console.log('handleCarta', 'desafio', desafio)
+    console.log('handleCarta', 'esCartaDeTesoro(carta)', esCartaDeTesoro(carta))
+    console.log('handleCarta', 'esCartaDePergaminoDeLuz(carta)', esCartaDePergaminoDeLuz(carta))
+    console.log('handleCarta', 'esCartaDeValor(carta)', esCartaDeValor(carta))
 
     if (puntosVida < 2) {
       setMensaje(`Has muerto. Has perdido`)
@@ -216,6 +222,10 @@ function App() {
         setMano(mano => mano.filter(item => item !== carta))
         pasarCartaAlTurno(carta)
         setAccion(0)
+        return
+    }
+    if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && encuentro.includes('monstruo') && desafio<valorCarta(carta)) {
+        setMensaje(`Tiro una carta de valor (${carta}) para distraer al monstruo`)
         return
     }
     setMensaje(`No tiene sentido usar esa carta`)
