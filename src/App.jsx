@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { tipoCarta, valorCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, esCartaDeValor } from './utils.jsx'
+import { tipoCarta, valorCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, esCartaDeValor } from './utils'
+import { Carta } from './components/Card'
 import './App.css'
 
 const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
@@ -21,7 +22,7 @@ function App() {
   const [encuentro, setEncuentro] = useState('')
   const [desafio, setDesafio] = useState(0)
   const [accion, setAccion] = useState(0)
-  const [ultimaCarta, setUltimaCarta] = useState('\u00A0')
+  const [ultimaCarta, setUltimaCarta] = useState(null)
   const [favorDivino, setFavorDivino] = useState(false)
   const [puntosVida, setPuntosVida] = useState(10)
   const [mensaje, setMensaje] = useState('')
@@ -238,84 +239,87 @@ function App() {
     <>
       <h1 className="text-3xl font-bold underline">Tomb of Four Kings</h1>
       <div className="game">
-        <div className="antorchas flex border-2">
+        <div className="antorchas">
           Antorchas
-          {
-            antorchas.map((antorcha, index_antorcha) => {
-              let key = 'antorcha_' + index_antorcha
-              return (
-                <div key={key} className="antorcha">
-                  {antorcha}
-                </div>
-              )
-            })
-          }
+          <div className="flex border-2">
+            {
+              antorchas.map((antorcha, index_antorcha) => {
+                let key = 'antorcha_' + index_antorcha
+                return (
+                  <Carta key={key} carta={antorcha} />
+                )
+              })
+            }
+          </div>
         </div>
-        <div className="turnos flex">
+        <div className="turnos">
           Turnos
-          {
-            turnos.map((turno, index_turno) => {
-              let key = 'turno_' + index_turno
-              return (
-                <div key={key} className="turno flex border-2">
-                  {turno.map((carta, index_carta) => {
-                    let key = 'carta_' + index_turno + '_' + index_carta
-                    return (
-                      <div key={key} className="carta">
-                        {carta}
-                      </div>
-                    )
-                  })}
-                </div>
-              )
-            })
-          }
+          <div className="flex border-2">
+            {
+              turnos.map((turno, index_turno) => {
+                let key = 'turno_' + index_turno
+                return (
+                  <div key={key} className="turno flex border-2">
+                    {turno.map((carta, index_carta) => {
+                      let key = 'carta_' + index_turno + '_' + index_carta
+                      return (
+                        <Carta key={key} carta={carta} />
+                      )
+                    })}
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
-        <div className="turno-actual flex border-2">
+        <div className="mano">
           Mano
-          {
-            mano.map((carta_mano, index_carta_mano) => {
-              let key = 'carta_mano_' + index_carta_mano
-              return (
-                <button key={key} className="carta_mano" onClick={() => handleCarta(carta_mano)} title={tipoCarta(carta_mano)}>
-                  {carta_mano}
-                </button>
-              )
-            })
-          }
+          <div className="flex border-2">
+            {
+              mano.map((carta_mano, index_carta_mano) => {
+                let key = 'carta_mano_' + index_carta_mano
+                return (
+                  <Carta key={key} carta={carta_mano} handleClick={handleCarta} />
+                )
+              })
+            }
+          </div>
         </div>
-        <div className="turno-actual flex border-2">
+        <div className="turno-actual">
           Turno actual
-          {
-            turnoActual.map((carta_turno_actual, index_carta_turno_actual) => {
-              let key = 'carta_turno_actual_' + index_carta_turno_actual
-              return (
-                <div key={key} className="carta_turno_actual">
-                  {carta_turno_actual}
-                </div>
-              )
-            })
-          }
+          <div className="flex border-2">
+            {
+              turnoActual.map((carta_turno_actual, index_carta_turno_actual) => {
+                let key = 'carta_turno_actual_' + index_carta_turno_actual
+                return (
+                  <Carta key={key} carta={carta_turno_actual} />
+                )
+              })
+            }
+          </div>
         </div>
-        <div className="puntos-vida flex border-2">
-          Puntos de vida {puntosVida}
+        <div className="puntos-vida">
+          Puntos de vida
+          <div className="flex border-2">
+            {puntosVida}
+          </div>
         </div>
         <button onClick={handleGame}>
           Baraja
         </button>
-        <button>
-          {ultimaCarta}
-        </button>
-        <p>
-          {/* Turno: {contador} Carta: {tipoCarta(ultimaCarta)} Encuentro: {encuentro} Desafio: {desafio} Accion: {accion} Favor divino: { favorDivino ? 'Si' : 'No' } Puntos de vida: {puntosVida} */}
-        </p>
+        { ultimaCarta && (
+          <div className="inline-block">
+            <Carta carta={ultimaCarta} />
+          </div>
+        )
+        }
         <p>
           Mensaje: {mensaje}
         </p>
+        <p>
+          Accion: {accion}
+        </p>
       </div>
-      <p className="read-the-docs">
-        {/* Click on the Vite and React logos to learn more */}
-      </p>
     </>
   )
 }
