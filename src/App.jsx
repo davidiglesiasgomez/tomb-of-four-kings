@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { tipoCarta, valorCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, esCartaDeValor } from './utils.jsx'
 import './App.css'
 
 const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
@@ -24,88 +25,15 @@ function App() {
   const [favorDivino, setFavorDivino] = useState(false)
   const [puntosVida, setPuntosVida] = useState(10)
   const [mensaje, setMensaje] = useState('')
+  const [esquivarGolpe, setEsquivarGolpe] = useState(false)
 
-  const tipoCarta = (carta) => {
-    if (carta === 'Jk') {
-      return 'Pergamino de luz'
-    }
-    if (carta === 'J♠') {
-      return 'Volverse berseker';
-    }
-    if (carta === 'J♣') {
-      return 'Abrir cerradura';
-    }
-    if (carta === 'J♥') {
-      return 'Esquivar golpe';
-    }
-    let valor = carta.slice(0, -1)
-    let palo = carta.slice(-1)
-    if (valor === 'A') {
-      return `Antorcha ${palo}`
-    }
-    if (valor === 'K') {
-      return `Tesoro ${palo}`
-    }
-    if (valor === 'Q') {
-      return `Favor divino ${palo}`
-    }
-    if (palo === '♠') {
-      return `Monstruo ${valor}`
-    }
-    if (palo === '♦') {
-      return `Trampa ${valor}`
-    }
-    if (palo === '♣') {
-      return `Puerta cerrada ${valor}`
-    }
-    return '';
+  const continuarTurno = () => {
+    setMensaje(mensaje => mensaje + `. Continua el turno...`)
+    setAccion(0)
   }
-
-  const esCartaDeEncuentro = (carta) => {
-    let valor = carta.slice(0, -1)
-    let palo = carta.slice(-1)
-    return ( ['2', '3', '4', '5', '6', '7', '8', '9', '10'].includes(valor) && ['♦', '♠', '♣'].includes(palo) ? true : false )
-  }
-
-  const esCartaDeAccion = (carta) => esCartaDeEncuentro(carta)
-
-  const esCartaDeAntorcha = (carta) => {
-    let valor = carta.slice(0, -1)
-    return ( valor === 'A' ? true : false )
-  }
-
-  const esCartaDeHabilidad = (carta) => {
-    let valor = carta.slice(0, -1)
-    if (carta == 'Jk') return false
-    return ( valor === 'J' ? true : false )
-  }
-
-  const esCartaDeTesoro = (carta) => {
-    let valor = carta.slice(0, -1)
-    return ( valor === 'K' ? true : false )
-  }
-
-  const esCartaDeFavorDivino = (carta) => {
-    let valor = carta.slice(0, -1)
-    return ( valor === 'Q' ? true : false )
-  }
-
-  const esCartaDePergaminoDeLuz = (carta) => {
-    return ( carta === 'Jk' ? true : false )
-  }
-
-  const esCartaDeValor = (carta) => {
-    let valor = carta.slice(0, -1)
-    let palo = carta.slice(-1)
-    return ( ['2', '3', '4', '5', '6', '7', '8', '9', '10'].includes(valor) && '♦' === palo ? true : false )
-
-  }
-
-//   const continuarTurno = () => {
-//     setAccion(0)
-//   }
 
   const terminarTurno = () => {
+    setMensaje(mensaje => mensaje + `. Finaliza el turno...`)
     setFavorDivino(false)
     setContador(contador => contador + 1)
     setTurnoActual([])
@@ -119,6 +47,9 @@ function App() {
     let tesoros = turnoActual.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
     // console.log('recogerTesoro', 'tesoros', tesoros)
     console.log('recogerTesoro', 'comprobar que queda por lo menos 1 carta, si no hay que descartar el de menor valor')
+    // if () {
+
+    // }
     setMano(mano => mano.concat(tesoros))
   }
 
@@ -131,6 +62,19 @@ function App() {
     setAntorchas(temp)
   }
 
+  const perderPuntosVida = (puntos) => {
+    console.log('perderPuntosVida', 'puntos', puntos)
+    console.log('perderPuntosVida', 'esquivarGolpe', esquivarGolpe)
+    console.log('perderPuntosVida', 'accion', accion)
+    if (esquivarGolpe) {
+      setEsquivarGolpe(false)
+      setAccion(0)
+      return
+    }
+    setPuntosVida(puntosVida => puntosVida - puntos)
+    setAccion(0)
+  }
+
   const handleGame = () => {
     let temp = null
 
@@ -140,39 +84,43 @@ function App() {
     console.log('handleGame', 'desafio', desafio)
     console.log('handleGame', 'accion', accion)
 
+    if (puntosVida < 2) {
+      setMensaje(`Has muerto. Has perdido`)
+      return
+    }
+
     if (encuentro !== '' && (accion !== 0 || favorDivino)) {
         console.log(`Tenemos encuentro y accion`)
-        if (encuentro.includes('Monstruo')) {
+        if (encuentro.includes('monstruo')) {
             if (desafio<=accion || favorDivino) {
-                setMensaje(`Maté al monstruo`)
+                setMensaje(`Maté al monstruo` + ( favorDivino ? ` por favor divino` : `` ))
                 recogerTesoro()
                 terminarTurno()
             } else {
                 setMensaje(`El monstruo me atacó y perdí ${desafio-accion} puntos de vida`)
-                setPuntosVida(puntosVida => puntosVida - desafio + accion)
-                // continuarTurno()
-                setAccion(0)
+                perderPuntosVida(desafio - accion)
+                continuarTurno()
             }
         }
-        if (encuentro.includes('Trampa')) {
+        if (encuentro.includes('trampa')) {
             if (desafio<=accion || favorDivino) {
-                setMensaje(`Desactivé la trampa`)
+                setMensaje(`Desactivé la trampa` + ( favorDivino ? ` por favor divino` : `` ))
                 recogerTesoro()
                 terminarTurno()
             } else {
                 setMensaje(`Se activó la trampa y perdí ${desafio-accion} puntos de vida`)
-                setPuntosVida(puntosVida => puntosVida - desafio + accion)
+                perderPuntosVida(desafio - accion)
                 terminarTurno()
             }
         }
-        if (encuentro.includes('Puerta cerrada')) {
+        if (encuentro.includes('puerta cerrada')) {
             if (desafio<=accion || favorDivino) {
-                setMensaje(`Abrí la puerta`)
+                setMensaje(`Abrí la puerta` + ( favorDivino ? ` por favor divino` : `` ))
                 recogerTesoro()
                 terminarTurno()
             } else {
                 setMensaje(`No pude abrir la puerta`)
-                descartarCartas(desafio-accion)
+                descartarCartas(desafio - accion)
                 terminarTurno()
             }
         }
@@ -190,40 +138,49 @@ function App() {
     // console.log('valor', valor)
     // console.log('palo', palo)
 
+    let guardarCarta = true
+
+    if (esCartaDeAntorcha(carta)) {
+      setMensaje(`Me acaba de arder una antorcha`)
+      temp = [...antorchas]
+      temp.push(carta)
+      setAntorchas(temp)
+      guardarCarta = false
+    }
+    if (esCartaDeHabilidad(carta)) {
+      setMensaje(`Me acabo de encontrar una nueva habilidad "${tipoCarta(carta)}"`)
+      temp = [...mano]
+      temp.push(carta)
+      setMano(temp)
+      guardarCarta = false
+    }
+    if (esCartaDeTesoro(carta)) {
+      setMensaje(`Ha aparecido un tesoro de los reyes`)
+    }
+    if (esCartaDeFavorDivino(carta)) {
+      setMensaje(`La diosa me bendice con el favor divino`)
+      setFavorDivino(true)
+    }
+    if (esCartaDePergaminoDeLuz(carta)) {
+      setMensaje(`Ha aparecido el pergamino de luz`)
+    }
+    if (encuentro === '' && esCartaDeEncuentro(carta)) {
+      setMensaje(`Me acabo de encontrar ${tipoCarta(carta)}`)
+      setEncuentro(tipoCarta(carta))
+      setDesafio(valor)
+    }
+    if (encuentro !== '' && esCartaDeAccion(carta)) {
+      setMensaje(`Contrarrestro con un ${valor}`)
+      setAccion(valor)
+    }
+
+    if (!guardarCarta) {
+      return
+    }
+
     temp = [...turnoActual]
     temp.push(carta)
     setTurnoActual(temp)
-
-    if (esCartaDeAntorcha(carta)) {
-        setMensaje(`Me acaba de arder una antorcha`)
-        temp = [...antorchas]
-        temp.push(carta)
-        setAntorchas(temp)
-    }
-    if (esCartaDeHabilidad(carta)) {
-        setMensaje(`Me acabo de encontrar una nueva habilidad "${tipoCarta(carta)}"`)
-        temp = [...mano]
-        temp.push(carta)
-        setMano(temp)
-    }
-    if (esCartaDeTesoro(carta)) {
-        //
-    }
-    if (esCartaDeFavorDivino(carta)) {
-        setMensaje(`La diosa me bendice con el favor divino`)
-        setFavorDivino(true)
-    }
-    if (esCartaDePergaminoDeLuz(carta)) {
-        //
-    }
-    if (encuentro === '' && esCartaDeEncuentro(carta)) {
-        setMensaje(`Me acabo de encontrar ${tipoCarta(carta)}`)
-        setEncuentro(tipoCarta(carta))
-        setDesafio(valor)
-    }
-    if (encuentro !== '' && esCartaDeAccion(carta)) {
-        setAccion(valor)
-    }
 
     temp = [...turnos]
     if (typeof temp[contador] === 'undefined') {
@@ -231,12 +188,17 @@ function App() {
     }
     temp[contador].push(carta)
     setTurnos(temp)
-
   }
 
   const handleCarta = (carta) => {
+
+    if (puntosVida < 2) {
+      setMensaje(`Acabas de morir. Has perdido`)
+      return
+    }
+
     console.log('handleCarta', carta)
-    if (encuentro.includes('Monstruo') && carta === 'J♠') {
+    if (carta === 'J♠' && encuentro.includes('monstruo')) {
         setMensaje(`Mato al monstruo con mi habilidad especial de volverse berseker`)
         setMano(mano => mano.filter(item => item !== 'J♠'))
         // setTurnos(turnos => turnos[contador].concat('J♠'))
@@ -244,7 +206,7 @@ function App() {
         terminarTurno()
         return
     }
-    if (encuentro.includes('Trampa') && carta === 'J♦') {
+    if (carta === 'J♦' && encuentro.includes('trampa')) {
         setMensaje(`Desactivo el mecanismo con mi habilidad especial de desactivar trampas`)
         setMano(mano => mano.filter(item => item !== 'J♦'))
         // setTurnos(turnos => turnos[contador].concat('J♦'))
@@ -252,12 +214,21 @@ function App() {
         terminarTurno()
         return
     }
-    if (encuentro.includes('Puerta cerrada') && carta === 'J♣') {
+    if (carta === 'J♣' && encuentro.includes('puerta cerrada')) {
         setMensaje(`Abro la puerta con mi habilidad especial de abrir cerraduras`)
         setMano(mano => mano.filter(item => item !== 'J♣'))
         // setTurnos(turnos => turnos[contador].concat('J♣'))
         recogerTesoro()
         terminarTurno()
+        return
+    }
+    if (carta === 'J♥' && (encuentro.includes('monstruo') || encuentro.includes('trampa'))) {
+        setMensaje(`No me hago daño con mi habilidad especial de esquivar golpe`)
+        setMano(mano => mano.filter(item => item !== 'J♥'))
+        // setTurnos(turnos => turnos[contador].concat('J♥'))
+        // recogerTesoro()
+        // terminarTurno()
+        setEsquivarGolpe(true)
         return
     }
     setMensaje(`No tiene sentido usar esa carta`)
@@ -327,10 +298,10 @@ function App() {
           }
         </div>
         <div className="puntos-vida flex border-2">
-            Puntos de vida {puntosVida}
+          Puntos de vida {puntosVida}
         </div>
         <button onClick={handleGame}>
-          Deck
+          Baraja
         </button>
         <button>
           {ultimaCarta}
@@ -343,7 +314,7 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        {/* Click on the Vite and React logos to learn more */}
       </p>
     </>
   )
