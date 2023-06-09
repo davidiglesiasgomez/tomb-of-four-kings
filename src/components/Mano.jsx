@@ -5,7 +5,7 @@ export const Mano = ({ mano, handleCarta }) => {
   return (
     <div className="mano">
       Mano
-      <div className="flex border-2">
+      <div className="flex border-2 rounded">
         {
           mano.map((carta_mano, index_carta_mano) => {
             let key = 'carta_mano_' + index_carta_mano

@@ -264,7 +264,7 @@ function App() {
       <h1 className="text-3xl font-bold underline">Tomb of Four Kings</h1>
       <div className="game">
         <Antorchas antorchas={antorchas} />
-        <Turnos turnos={turnos} />
+        <Turnos turnos={turnos} retornar={retornar} />
         <Mano mano={mano} handleCarta={handleCarta} />
         { false && <TurnoActual turnoActual={turnoActual} /> }
         <Control handleGame={handleGame} handleRetornar={handleRetornar} handleResetear={handleResetear} ultimaCarta={ultimaCarta} mensaje={mensaje} puntosVida={puntosVida} />

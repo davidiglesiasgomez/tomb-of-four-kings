@@ -5,7 +5,7 @@ export const Antorchas = ({ antorchas }) => {
   return (
     <div className="antorchas">
       Antorchas
-      <div className="flex border-2">
+      <div className="flex border-2 rounded">
         {
           antorchas.map((antorcha, index_antorcha) => {
             let key = 'antorcha_' + index_antorcha
