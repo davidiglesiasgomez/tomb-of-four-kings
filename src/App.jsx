@@ -13,7 +13,7 @@ const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', 
 '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
 
 function App() {
-  const [baraja, setBaraja] = useState(baraja_inicial)
+  const [baraja, setBaraja] = useState(suffleArray(baraja_inicial))
   const [antorchas, setAntorchas] = useState([])
   const [turnos, setTurnos] = useState([])
   const [contador, setContador] = useState(0)
@@ -243,7 +243,7 @@ function App() {
 
   const handleResetear = () => {
     setMensaje(`Resetear`)
-    setBaraja(baraja_inicial)
+    setBaraja(suffleArray(baraja_inicial))
     setAntorchas([])
     setTurnos([])
     setContador(0)
