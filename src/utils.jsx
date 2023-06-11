@@ -106,4 +106,5 @@ export const shuffleArray = (array) => {
     array[i] = array[j];
     array[j] = temp;
   }
+  return array
 }
