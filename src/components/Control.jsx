@@ -5,9 +5,11 @@ import { PropTypes } from 'prop-types'
 export const Control = ({ handleGame, handleRetornar, handleResetear, ultimaCarta, mensaje, puntosVida }) => {
   return (
     <>
-      <div className="inline-block">
-        <Carta carta={puntosVidaCarta(puntosVida)} />
-      </div>
+      { puntosVida>1 && (
+        <div className="inline-block">
+          <Carta carta={puntosVidaCarta(puntosVida)} />
+        </div>
+      )}
       <button onClick={handleGame}>
         Mazo
       </button>
@@ -15,8 +17,7 @@ export const Control = ({ handleGame, handleRetornar, handleResetear, ultimaCart
         <div className="inline-block">
           <Carta carta={ultimaCarta} />
         </div>
-        )
-      }
+      )}
       <button className="mr-1" onClick={handleRetornar}>
         Retornar
       </button>
