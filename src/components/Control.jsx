@@ -12,7 +12,7 @@ export const Control = ({ handleGame, handleRetornar, handleResetear, ultimaCart
             <Carta carta={puntosVidaCarta(puntosVida)} />
           </div>
         )}
-        <div onClick={handleGame} className="w-16 relative cursor-pointer">
+        <div onClick={handleGame}>
           <Cartas />
         </div>
         { ultimaCarta && (

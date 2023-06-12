@@ -1,4 +1,5 @@
 import { Carta } from "../components/Carta"
+import { Cartas } from "../components/Cartas"
 import { PropTypes } from 'prop-types'
 
 export const Turnos = ({ turnos, retornar }) => {
@@ -10,15 +11,19 @@ export const Turnos = ({ turnos, retornar }) => {
     <div className="turnos">
       Turnos
       <table className="table-auto">
+        <tbody>
         <tr className="">
           {
-            ida.map((turno, index_turno) => {
-              let key = 'turno_' + index_turno
+            ida.map((turno, index, { length }) => {
+              let key = 'turno_' + index
+              // if (length - 1 !== index || retornar > 0) {
+              //   return <td key={key} className=""><Cartas /></td>
+              // }
               return (
                 <td key={key} className="">
                   <div className="flex basis-0 border-2 rounded">
                     {turno.map((carta, index_carta) => {
-                      let key = 'carta_' + index_turno + '_' + index_carta
+                      let key = 'carta_' + index + '_' + index_carta
                       return (
                         <Carta key={key} carta={carta} />
                       )
@@ -28,26 +33,29 @@ export const Turnos = ({ turnos, retornar }) => {
               )
             })
           }
-          &nbsp;
         </tr>
         { vuelta.length>0 && <>
           <tr className="">
             {
-              blancos.map((blanco, index_blanco) => {
-                let key = 'blanco_' + index_blanco
+              blancos.map((blanco, index) => {
+                let key = 'blanco_' + index
                 return (
                   <td key={key} className="">&nbsp;</td>
                 )
               })
             }
             {
-              vuelta.map((turno, index_turno) => {
-                let key = 'turno_' + index_turno
+              vuelta.map((turno, index, { length }) => {
+                let key = 'turno_' + index
+                // console.log('index (vuelta)', index)
+                // if (length - 1 !== index) {
+                //   return <td key={key} className=""><Cartas /></td>
+                // }
                 return (
                   <td key={key} className="">
                     <div className="flex basis-0 border-2 rounded">
                       {turno.map((carta, index_carta) => {
-                        let key = 'carta_' + index_turno + '_' + index_carta
+                        let key = 'carta_' + index + '_' + index_carta
                         return (
                           <Carta key={key} carta={carta} />
                         )
@@ -58,7 +66,9 @@ export const Turnos = ({ turnos, retornar }) => {
               })
             }
           </tr>
-        </>}
+        </>
+        }
+        </tbody>
       </table>
     </div>
   )
