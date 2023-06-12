@@ -6,15 +6,18 @@ import { Turnos } from './components/Turnos'
 import { Mano } from './components/Mano'
 import { TurnoActual } from './components/TurnoActual'
 import { Control } from './components/Control'
+import confetti from 'canvas-confetti'
 
-// const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
-// '10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
-// 'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
-// '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
+const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
+'10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
+'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
+'9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
 
 // const baraja_inicial = ['A♦', 'A♥', 'A♣', 'A♠']
 
-const baraja_inicial = ['Jk', '2♦', '4♦', 'A♦', 'A♥', 'A♣', 'A♠', '2♠', '8♠']
+// const baraja_inicial = ['Jk', '2♦', '4♦', 'A♦', 'A♥', 'A♣', 'A♠', '2♠', '8♠']
+
+// const baraja_inicial = ['2♦', '4♦', '2♠', '8♠', '3♠', '9♠', '4♠', '10♠', '5♠', '4♠']
 
 function App() {
   const [baraja, setBaraja] = useState(barajarBaraja(baraja_inicial))
@@ -31,6 +34,7 @@ function App() {
   const [puntosVida, setPuntosVida] = useState(10)
   const [mensaje, setMensaje] = useState('')
   const [retornar, setRetornar] = useState(0)
+  const [fin, setFin] = useState(false)
 
   const continuarTurno = () => {
     setMensaje(mensaje => mensaje + `. Continua el turno...`)
@@ -77,26 +81,28 @@ function App() {
   const handleGame = () => {
     let temp = null
 
+    if (retornar>1 && turnos.length === 2 * retornar - 1) {
+        setMensaje(`Has regresado a la entrada de la tumba. Has ganado`)
+        setFin(true)
+        confetti()
+        return
+    }
     if (puntosVida < 2) {
       setMensaje(`Has muerto. Has perdido`)
+      setFin(true)
       return
     }
     if (antorchas.length === 4 && !antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
         setMensaje(`La última antorcha se consumió. Has perdido`)
+        setFin(true)
     }
     if (antorchas.length === 5) {
         setMensaje(`La última antorcha se consumió. Has perdido`)
+        setFin(true)
         return
     }
 
-    // console.log('handleGame', 'ultimaCarta', ultimaCarta)
-    // console.log('handleGame', 'contador', contador)
-    // console.log('handleGame', 'encuentro', encuentro)
-    // console.log('handleGame', 'desafio', desafio)
-    // console.log('handleGame', 'accion', accion)
-
     if (encuentro !== '' && (accion !== 0 || favorDivino)) {
-        // console.log(`Tenemos encuentro y accion`)
         if (encuentro.includes('monstruo')) {
             if (desafio<=accion || favorDivino) {
                 setMensaje(`Maté al monstruo` + ( favorDivino ? ` por favor divino` : `` ))
@@ -141,10 +147,7 @@ function App() {
 
     let valor = parseInt(carta.slice(0, -1))
 
-    let guardarCarta = true
-
     if (esCartaDeAntorcha(carta)) {
-
       if (antorchas.length === 3 && mano.some(carta => esCartaDePergaminoDeLuz(carta))) {
         setMensaje(`La última antorcha se iba a consumir. Por suerte, posees el pergamino de luz. La última antorcha pasa al fondo del mazo de cartas`)
         temp = [...temp]
@@ -171,15 +174,13 @@ function App() {
       temp.push(carta)
       setAntorchas(temp)
       return
-
-      // guardarCarta = false
     }
     if (esCartaDeHabilidad(carta)) {
       setMensaje(`Me acabo de encontrar una nueva habilidad "${tipoCarta(carta)}"`)
       temp = [...mano]
       temp.push(carta)
       setMano(temp)
-      guardarCarta = false
+      return
     }
     if (esCartaDeTesoro(carta)) {
       setMensaje(`Ha aparecido un tesoro de los reyes`)
@@ -201,10 +202,6 @@ function App() {
       setAccion(valor)
     }
 
-    if (!guardarCarta) {
-      return
-    }
-
     temp = [...turnoActual]
     temp.push(carta)
     setTurnoActual(temp)
@@ -213,15 +210,7 @@ function App() {
   }
 
   const handleCarta = (carta) => {
-    console.log('handleCarta', 'carta', carta)
-    console.log('handleCarta', 'encuentro', encuentro)
-    console.log('handleCarta', 'desafio', desafio)
-    console.log('handleCarta', 'esCartaDeTesoro(carta)', esCartaDeTesoro(carta))
-    console.log('handleCarta', 'esCartaDePergaminoDeLuz(carta)', esCartaDePergaminoDeLuz(carta))
-    console.log('handleCarta', 'esCartaDeValor(carta)', esCartaDeValor(carta))
-
-    if (puntosVida < 2) {
-      setMensaje(`Has muerto. Has perdido`)
+    if (fin) {
       return
     }
 
@@ -292,6 +281,7 @@ function App() {
     setPuntosVida(10)
     setMensaje('')
     setRetornar(0)
+    setFin(false)
   }
 
   return (
