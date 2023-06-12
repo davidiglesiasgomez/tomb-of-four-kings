@@ -54,8 +54,8 @@ function App() {
   const recogerTesoro = () => {
     let tesoros = turnoActual.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
     if (tesoros.length === turnoActual.length) {
-        tesoros.sort((a, b) => valorCarta(a) - valorCarta(b))
-        tesoros.shift()
+      tesoros.sort((a, b) => valorCarta(a) - valorCarta(b))
+      tesoros.shift()
     }
     setMano(mano => mano.concat(tesoros))
   }
@@ -82,10 +82,10 @@ function App() {
     let temp = null
 
     if (retornar>1 && turnos.length === 2 * retornar - 1) {
-        setMensaje(`Has regresado a la entrada de la tumba. Has ganado`)
-        setFin(true)
-        confetti()
-        return
+      setMensaje(`Has regresado a la entrada de la tumba. Has ganado`)
+      setFin(true)
+      confetti()
+      return
     }
     if (puntosVida < 2) {
       setMensaje(`Has muerto. Has perdido`)
@@ -93,50 +93,50 @@ function App() {
       return
     }
     if (antorchas.length === 4 && !antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
-        setMensaje(`La última antorcha se consumió. Has perdido`)
-        setFin(true)
+      setMensaje(`La última antorcha se consumió. Has perdido`)
+      setFin(true)
     }
     if (antorchas.length === 5) {
-        setMensaje(`La última antorcha se consumió. Has perdido`)
-        setFin(true)
-        return
+      setMensaje(`La última antorcha se consumió. Has perdido`)
+      setFin(true)
+      return
     }
 
     if (encuentro !== '' && (accion !== 0 || favorDivino)) {
-        if (encuentro.includes('monstruo')) {
-            if (desafio<=accion || favorDivino) {
-                setMensaje(`Maté al monstruo` + ( favorDivino ? ` por favor divino` : `` ))
-                recogerTesoro()
-                terminarTurno()
-            } else {
-                setMensaje(`El monstruo me atacó y perdí ${desafio-accion} puntos de vida`)
-                setPuntosVida(puntosVida => puntosVida - desafio + accion)
-                continuarTurno()
-            }
+      if (encuentro.includes('monstruo')) {
+        if (desafio<=accion || favorDivino) {
+          setMensaje(`Maté al monstruo` + ( favorDivino ? ` por favor divino` : `` ))
+          recogerTesoro()
+          terminarTurno()
+        } else {
+          setMensaje(`El monstruo me atacó y perdí ${desafio-accion} puntos de vida`)
+          setPuntosVida(puntosVida => puntosVida - desafio + accion)
+          continuarTurno()
         }
-        if (encuentro.includes('trampa')) {
-            if (desafio<=accion || favorDivino) {
-                setMensaje(`Desactivé la trampa` + ( favorDivino ? ` por favor divino` : `` ))
-                recogerTesoro()
-                terminarTurno()
-            } else {
-                setMensaje(`Se activó la trampa y perdí ${desafio-accion} puntos de vida`)
-                setPuntosVida(puntosVida => puntosVida - desafio + accion)
-                terminarTurno()
-            }
+      }
+      if (encuentro.includes('trampa')) {
+        if (desafio<=accion || favorDivino) {
+          setMensaje(`Desactivé la trampa` + ( favorDivino ? ` por favor divino` : `` ))
+          recogerTesoro()
+          terminarTurno()
+        } else {
+          setMensaje(`Se activó la trampa y perdí ${desafio-accion} puntos de vida`)
+          setPuntosVida(puntosVida => puntosVida - desafio + accion)
+          terminarTurno()
         }
-        if (encuentro.includes('puerta cerrada')) {
-            if (desafio<=accion || favorDivino) {
-                setMensaje(`Abrí la puerta` + ( favorDivino ? ` por favor divino` : `` ))
-                recogerTesoro()
-                terminarTurno()
-            } else {
-                setMensaje(`No pude abrir la puerta. Se descartan ${desafio - accion} cartas`)
-                descartarCartas(desafio - accion)
-                terminarTurno()
-            }
+      }
+      if (encuentro.includes('puerta cerrada')) {
+        if (desafio<=accion || favorDivino) {
+          setMensaje(`Abrí la puerta` + ( favorDivino ? ` por favor divino` : `` ))
+          recogerTesoro()
+          terminarTurno()
+        } else {
+          setMensaje(`No pude abrir la puerta. Se descartan ${desafio - accion} cartas`)
+          descartarCartas(desafio - accion)
+          terminarTurno()
         }
-        return
+      }
+      return
     }
 
     temp = [...baraja]
@@ -215,39 +215,42 @@ function App() {
     }
 
     if (carta === 'J♠' && encuentro.includes('monstruo')) {
-        setMensaje(`Mato al monstruo con mi habilidad especial de volverse berseker`)
-        setMano(mano => mano.filter(item => item !== carta))
-        pasarCartaAlTurno(carta)
-        recogerTesoro()
-        terminarTurno()
-        return
+      setMensaje(`Mato al monstruo con mi habilidad especial de volverse berseker`)
+      setMano(mano => mano.filter(item => item !== carta))
+      pasarCartaAlTurno(carta)
+      recogerTesoro()
+      terminarTurno()
+      return
     }
     if (carta === 'J♦' && encuentro.includes('trampa')) {
-        setMensaje(`Desactivo el mecanismo con mi habilidad especial de desactivar trampas`)
-        setMano(mano => mano.filter(item => item !== carta))
-        pasarCartaAlTurno(carta)
-        recogerTesoro()
-        terminarTurno()
-        return
+      setMensaje(`Desactivo el mecanismo con mi habilidad especial de desactivar trampas`)
+      setMano(mano => mano.filter(item => item !== carta))
+      pasarCartaAlTurno(carta)
+      recogerTesoro()
+      terminarTurno()
+      return
     }
     if (carta === 'J♣' && encuentro.includes('puerta cerrada')) {
-        setMensaje(`Abro la puerta con mi habilidad especial de abrir cerraduras`)
-        setMano(mano => mano.filter(item => item !== carta))
-        pasarCartaAlTurno(carta)
-        recogerTesoro()
-        terminarTurno()
-        return
+      setMensaje(`Abro la puerta con mi habilidad especial de abrir cerraduras`)
+      setMano(mano => mano.filter(item => item !== carta))
+      pasarCartaAlTurno(carta)
+      recogerTesoro()
+      terminarTurno()
+      return
     }
     if (carta === 'J♥' && (encuentro.includes('monstruo') || encuentro.includes('trampa'))) {
-        setMensaje(`No me hago daño con mi habilidad especial de esquivar golpe`)
-        setMano(mano => mano.filter(item => item !== carta))
-        pasarCartaAlTurno(carta)
-        setAccion(0)
-        return
+      setMensaje(`No me hago daño con mi habilidad especial de esquivar golpe`)
+      setMano(mano => mano.filter(item => item !== carta))
+      pasarCartaAlTurno(carta)
+      setAccion(0)
+      return
     }
     if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && encuentro.includes('monstruo') && desafio<valorCarta(carta)) {
-        setMensaje(`Tiro una carta de valor (${carta}) para distraer al monstruo`)
-        return
+      setMensaje(`Tiro una carta de valor (${carta}) para distraer al monstruo`)
+      setMano(mano => mano.filter(item => item !== carta))
+      pasarCartaAlTurno(carta)
+      terminarTurno()
+      return
     }
     setMensaje(`No tiene sentido usar esa carta`)
   }
