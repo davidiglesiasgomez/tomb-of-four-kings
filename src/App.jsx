@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { tipoCarta, valorCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, esCartaDeValor, shuffleArray } from './utils'
+import { tipoCarta, valorCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, esCartaDeValor, barajarBaraja } from './utils'
 import './App.css'
 import { Antorchas } from './components/Antorchas'
 import { Turnos } from './components/Turnos'
@@ -7,13 +7,17 @@ import { Mano } from './components/Mano'
 import { TurnoActual } from './components/TurnoActual'
 import { Control } from './components/Control'
 
-const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
-'10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
-'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
-'9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
+// const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
+// '10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
+// 'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
+// '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
+
+// const baraja_inicial = ['A♦', 'A♥', 'A♣', 'A♠']
+
+const baraja_inicial = ['Jk', '2♦', '4♦', 'A♦', 'A♥', 'A♣', 'A♠', '2♠', '8♠']
 
 function App() {
-  const [baraja, setBaraja] = useState(shuffleArray(baraja_inicial))
+  const [baraja, setBaraja] = useState(barajarBaraja(baraja_inicial))
   const [antorchas, setAntorchas] = useState([])
   const [turnos, setTurnos] = useState([])
   const [contador, setContador] = useState(0)
@@ -77,6 +81,13 @@ function App() {
       setMensaje(`Has muerto. Has perdido`)
       return
     }
+    if (antorchas.length === 4 && !antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
+        setMensaje(`La última antorcha se consumió. Has perdido`)
+    }
+    if (antorchas.length === 5) {
+        setMensaje(`La última antorcha se consumió. Has perdido`)
+        return
+    }
 
     // console.log('handleGame', 'ultimaCarta', ultimaCarta)
     // console.log('handleGame', 'contador', contador)
@@ -133,11 +144,35 @@ function App() {
     let guardarCarta = true
 
     if (esCartaDeAntorcha(carta)) {
+
+      if (antorchas.length === 3 && mano.some(carta => esCartaDePergaminoDeLuz(carta))) {
+        setMensaje(`La última antorcha se iba a consumir. Por suerte, posees el pergamino de luz. La última antorcha pasa al fondo del mazo de cartas`)
+        temp = [...temp]
+        temp.push(carta)
+        setBaraja(temp)
+
+        temp = [...antorchas]
+        temp.push('Jk')
+        setAntorchas(temp)
+        return
+      }
+
+      if (antorchas.filter(antorcha => esCartaDeAntorcha(antorcha)).length === 3) {
+        setMensaje(`Me acaba de arder la última antorcha`)
+        temp = [...antorchas]
+        temp.push(carta)
+        setAntorchas(temp)
+        return
+
+      }
+
       setMensaje(`Me acaba de arder una antorcha`)
       temp = [...antorchas]
       temp.push(carta)
       setAntorchas(temp)
-      guardarCarta = false
+      return
+
+      // guardarCarta = false
     }
     if (esCartaDeHabilidad(carta)) {
       setMensaje(`Me acabo de encontrar una nueva habilidad "${tipoCarta(carta)}"`)
@@ -243,7 +278,7 @@ function App() {
 
   const handleResetear = () => {
     setMensaje(`Resetear`)
-    setBaraja(shuffleArray(baraja_inicial))
+    setBaraja(barajarBaraja(baraja_inicial))
     setAntorchas([])
     setTurnos([])
     setContador(0)

@@ -108,3 +108,8 @@ export const shuffleArray = (array) => {
   }
   return array
 }
+
+export const barajarBaraja = (baraja) => {
+  return baraja
+  // return shuffleArray(baraja)
+}
