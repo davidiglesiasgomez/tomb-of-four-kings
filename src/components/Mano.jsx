@@ -1,4 +1,5 @@
 import { Carta } from "../components/Carta"
+import { valorCarta } from "../utils"
 import { PropTypes } from 'prop-types'
 
 export const Mano = ({ mano, handleCarta }) => {
@@ -7,7 +8,7 @@ export const Mano = ({ mano, handleCarta }) => {
       Mano
       <div className="flex border-2 rounded">
         {
-          mano.map((carta_mano, index_carta_mano) => {
+          mano.sort((a, b) => valorCarta(a) - valorCarta(b)).map((carta_mano, index_carta_mano) => {
             let key = 'carta_mano_' + index_carta_mano
             return (
               <Carta key={key} carta={carta_mano} handleClick={handleCarta} />
