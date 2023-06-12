@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types'
 export const Turnos = ({ turnos, retornar }) => {
   let ida = ( retornar > 0 ? turnos.slice(0, retornar) : turnos )
   let vuelta = ( retornar > 0 ? turnos.slice(retornar).reverse() : [] )
-  let blancos = ( retornar > 0 ? [...Array(retornar - vuelta.length - 1).keys()] : [] )
+  let blancos = ( retornar > 0 ? [...Array(( retornar - vuelta.length - 1 >= 0 ? retornar - vuelta.length - 1 : 0 )).keys()] : [] )
 
   return (
     <div className="turnos">
@@ -19,6 +19,9 @@ export const Turnos = ({ turnos, retornar }) => {
               // if (length - 1 !== index || retornar > 0) {
               //   return <td key={key} className=""><Cartas /></td>
               // }
+              if (turno.length === 0) {
+                return
+              }
               return (
                 <td key={key} className="">
                   <div className="flex basis-0 border-2 rounded">
@@ -47,10 +50,12 @@ export const Turnos = ({ turnos, retornar }) => {
             {
               vuelta.map((turno, index, { length }) => {
                 let key = 'turno_' + index
-                // console.log('index (vuelta)', index)
                 // if (length - 1 !== index) {
                 //   return <td key={key} className=""><Cartas /></td>
                 // }
+                if (turno.length === 0) {
+                  return
+                }
                 return (
                   <td key={key} className="">
                     <div className="flex basis-0 border-2 rounded">

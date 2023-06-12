@@ -4,7 +4,6 @@ import './App.css'
 import { Antorchas } from './components/Antorchas'
 import { Turnos } from './components/Turnos'
 import { Mano } from './components/Mano'
-import { TurnoActual } from './components/TurnoActual'
 import { Control } from './components/Control'
 import confetti from 'canvas-confetti'
 
@@ -24,7 +23,6 @@ function App() {
   const [antorchas, setAntorchas] = useState([])
   const [turnos, setTurnos] = useState([])
   const [contador, setContador] = useState(0)
-  const [turnoActual, setTurnoActual] = useState([])
   const [mano, setMano] = useState([])
   const [encuentro, setEncuentro] = useState('')
   const [desafio, setDesafio] = useState(0)
@@ -45,15 +43,14 @@ function App() {
     setMensaje(mensaje => mensaje + `. Finaliza el turno...`)
     setFavorDivino(false)
     setContador(contador => contador + 1)
-    setTurnoActual([])
     setEncuentro('')
     setDesafio(0)
     setAccion(0)
   }
 
   const recogerTesoro = () => {
-    let tesoros = turnoActual.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
-    if (tesoros.length === turnoActual.length) {
+    let tesoros = turnos[contador].filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
+    if (tesoros.length === turnos[contador].length) {
       tesoros.sort((a, b) => valorCarta(a) - valorCarta(b))
       tesoros.shift()
     }
@@ -81,7 +78,10 @@ function App() {
   const handleGame = () => {
     let temp = null
 
-    if (retornar>1 && turnos.length === 2 * retornar - 1) {
+    if (fin) {
+      return
+    }
+    if (retornar>1 && turnos.length === 2 * retornar - 1 && encuentro === '' && desafio === 0 && accion === 0) {
       setMensaje(`Has regresado a la entrada de la tumba. Has ganado`)
       setFin(true)
       confetti()
@@ -202,14 +202,12 @@ function App() {
       setAccion(valor)
     }
 
-    temp = [...turnoActual]
-    temp.push(carta)
-    setTurnoActual(temp)
-
     pasarCartaAlTurno(carta)
   }
 
   const handleCarta = (carta) => {
+
+    console.log('handleCarta', 'fin', fin)
     if (fin) {
       return
     }
@@ -256,11 +254,11 @@ function App() {
   }
 
   const handleRetornar = () => {
-    if (contador <= 1 && turnoActual.length === 0) {
+    if (contador <= 1) {
       setMensaje(`No puedes retornar porque acabas de empezar`)
       return
     }
-    if (turnoActual.length !== 0 || encuentro !== '' || desafio !== 0 || accion !== 0) {
+    if (turnos[contador] && turnos[contador].length !== 0 || encuentro !== '' || desafio !== 0 || accion !== 0) {
       setMensaje(`No puedes retornar porque estás en medio de un turno`)
       return
     }
@@ -274,7 +272,6 @@ function App() {
     setAntorchas([])
     setTurnos([])
     setContador(0)
-    setTurnoActual([])
     setMano([])
     setEncuentro('')
     setDesafio(0)
@@ -294,7 +291,6 @@ function App() {
         <Antorchas antorchas={antorchas} />
         <Turnos turnos={turnos} retornar={retornar} />
         <Mano mano={mano} handleCarta={handleCarta} />
-        { false && <TurnoActual turnoActual={turnoActual} /> }
         <Control handleGame={handleGame} handleRetornar={handleRetornar} handleResetear={handleResetear} ultimaCarta={ultimaCarta} mensaje={mensaje} puntosVida={puntosVida} />
       </div>
     </>
