@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { tipoCarta, valorCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, esCartaDeValor, barajarBaraja } from './utils'
+import { tipoCarta, esCartaDeEncuentro, esCartaDeAccion, esCartaDeAntorcha, esCartaDeHabilidad, esCartaDeTesoro, esCartaDeFavorDivino, esCartaDePergaminoDeLuz, barajarBaraja, barajaInicial, marcarRetorno, sacarCarta, pasarCartaAlTurno, descartarCartas, recogerTesoro } from './utils'
 import './App.css'
 import { Antorchas } from './components/Antorchas'
 import { Turnos } from './components/Turnos'
@@ -7,19 +7,8 @@ import { Mano } from './components/Mano'
 import { Control } from './components/Control'
 import confetti from 'canvas-confetti'
 
-const baraja_inicial = ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
-'10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
-'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
-'9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
-
-// const baraja_inicial = ['A♦', 'A♥', 'A♣', 'A♠']
-
-// const baraja_inicial = ['Jk', '2♦', '4♦', 'A♦', 'A♥', 'A♣', 'A♠', '2♠', '8♠']
-
-// const baraja_inicial = ['2♦', '4♦', '2♠', '8♠', '3♠', '9♠', '4♠', '10♠', '5♠', '4♠']
-
 function App() {
-  const [baraja, setBaraja] = useState(barajarBaraja(baraja_inicial))
+  const [baraja, setBaraja] = useState(barajarBaraja(barajaInicial()))
   const [antorchas, setAntorchas] = useState([])
   const [turnos, setTurnos] = useState([])
   const [contador, setContador] = useState(0)
@@ -34,12 +23,12 @@ function App() {
   const [retornar, setRetornar] = useState(0)
   const [fin, setFin] = useState(false)
 
-  const continuarTurno = () => {
+  const handleContinuarTurno = () => {
     setMensaje(mensaje => mensaje + `. Continua el turno...`)
     setAccion(0)
   }
 
-  const terminarTurno = () => {
+  const handleTerminarTurno = () => {
     setMensaje(mensaje => mensaje + `. Finaliza el turno...`)
     setFavorDivino(false)
     setContador(contador => contador + 1)
@@ -48,31 +37,20 @@ function App() {
     setAccion(0)
   }
 
-  const recogerTesoro = () => {
-    let tesoros = turnos[contador].filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
-    if (tesoros.length === turnos[contador].length) {
-      tesoros.sort((a, b) => valorCarta(a) - valorCarta(b))
-      tesoros.shift()
-    }
-    setMano(mano => mano.concat(tesoros))
+  const handleRecogerTesoro = () => {
+    let retornoObj = recogerTesoro(turnos, contador, mano)
+    setMano(retornoObj.mano)
   }
 
-  const descartarCartas = (numero_de_cartas) => {
-    let eliminados = baraja.splice(0, numero_de_cartas)
-    setBaraja(baraja)
-    eliminados = eliminados.filter(eliminado => esCartaDeAntorcha(eliminado))
-    let temp = [...antorchas]
-    eliminados.forEach(eliminado => temp.push(eliminado))
-    setAntorchas(temp)
+  const handleDescartarCartas = (numero_de_cartas) => {
+    let retornoObj = descartarCartas(baraja, antorchas, numero_de_cartas)
+    setBaraja(retornoObj.baraja)
+    setAntorchas(retornoObj.antorchas)
   }
 
-  const pasarCartaAlTurno = (carta) => {
-    let temp = [...turnos]
-    if (typeof temp[contador] === 'undefined') {
-      temp[contador] = []
-    }
-    temp[contador].push(carta)
-    setTurnos(temp)
+  const handlePasarCartaAlTurno = (carta) => {
+    let retornoObj = pasarCartaAlTurno(turnos, contador, carta)
+    setTurnos(retornoObj.turnos)
   }
 
   const handleGame = () => {
@@ -106,34 +84,34 @@ function App() {
       if (encuentro.includes('monstruo')) {
         if (desafio<=accion || favorDivino) {
           setMensaje(`Maté al monstruo` + ( favorDivino ? ` por favor divino` : `` ))
-          recogerTesoro()
-          terminarTurno()
+          handleRecogerTesoro()
+          handleTerminarTurno()
         } else {
           setMensaje(`El monstruo me atacó y perdí ${desafio-accion} puntos de vida`)
           setPuntosVida(puntosVida => puntosVida - desafio + accion)
-          continuarTurno()
+          handleContinuarTurno()
         }
       }
       if (encuentro.includes('trampa')) {
         if (desafio<=accion || favorDivino) {
           setMensaje(`Desactivé la trampa` + ( favorDivino ? ` por favor divino` : `` ))
-          recogerTesoro()
-          terminarTurno()
+          handleRecogerTesoro()
+          handleTerminarTurno()
         } else {
           setMensaje(`Se activó la trampa y perdí ${desafio-accion} puntos de vida`)
           setPuntosVida(puntosVida => puntosVida - desafio + accion)
-          terminarTurno()
+          handleTerminarTurno()
         }
       }
       if (encuentro.includes('puerta cerrada')) {
         if (desafio<=accion || favorDivino) {
           setMensaje(`Abrí la puerta` + ( favorDivino ? ` por favor divino` : `` ))
-          recogerTesoro()
-          terminarTurno()
+          handleRecogerTesoro()
+          handleTerminarTurno()
         } else {
           setMensaje(`No pude abrir la puerta. Se descartan ${desafio - accion} cartas`)
-          descartarCartas(desafio - accion)
-          terminarTurno()
+          handleDescartarCartas(desafio - accion)
+          handleTerminarTurno()
         }
       }
       return
@@ -202,73 +180,31 @@ function App() {
       setAccion(valor)
     }
 
-    pasarCartaAlTurno(carta)
+    handlePasarCartaAlTurno(carta)
   }
 
   const handleCarta = (carta) => {
-
-    console.log('handleCarta', 'fin', fin)
     if (fin) {
       return
     }
 
-    if (carta === 'J♠' && encuentro.includes('monstruo')) {
-      setMensaje(`Mato al monstruo con mi habilidad especial de volverse berseker`)
-      setMano(mano => mano.filter(item => item !== carta))
-      pasarCartaAlTurno(carta)
-      recogerTesoro()
-      terminarTurno()
-      return
-    }
-    if (carta === 'J♦' && encuentro.includes('trampa')) {
-      setMensaje(`Desactivo el mecanismo con mi habilidad especial de desactivar trampas`)
-      setMano(mano => mano.filter(item => item !== carta))
-      pasarCartaAlTurno(carta)
-      recogerTesoro()
-      terminarTurno()
-      return
-    }
-    if (carta === 'J♣' && encuentro.includes('puerta cerrada')) {
-      setMensaje(`Abro la puerta con mi habilidad especial de abrir cerraduras`)
-      setMano(mano => mano.filter(item => item !== carta))
-      pasarCartaAlTurno(carta)
-      recogerTesoro()
-      terminarTurno()
-      return
-    }
-    if (carta === 'J♥' && (encuentro.includes('monstruo') || encuentro.includes('trampa'))) {
-      setMensaje(`No me hago daño con mi habilidad especial de esquivar golpe`)
-      setMano(mano => mano.filter(item => item !== carta))
-      pasarCartaAlTurno(carta)
-      setAccion(0)
-      return
-    }
-    if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && encuentro.includes('monstruo') && desafio<valorCarta(carta)) {
-      setMensaje(`Tiro una carta de valor (${carta}) para distraer al monstruo`)
-      setMano(mano => mano.filter(item => item !== carta))
-      pasarCartaAlTurno(carta)
-      terminarTurno()
-      return
-    }
-    setMensaje(`No tiene sentido usar esa carta`)
+    let retornoObj = sacarCarta(carta, encuentro)
+    setMensaje(retornoObj.mensaje)
+    if (retornoObj.quitarCartaDeMano) setMano(mano => mano.filter(item => item !== carta))
+    if (retornoObj.pasarCartaAlTurno) handlePasarCartaAlTurno(carta)
+    if (retornoObj.recogerTesoro) handleRecogerTesoro()
+    if (retornoObj.resetearAccion) setAccion(0)
+    if (retornoObj.terminarTurno) handleTerminarTurno()
   }
 
   const handleRetornar = () => {
-    if (contador <= 1) {
-      setMensaje(`No puedes retornar porque acabas de empezar`)
-      return
-    }
-    if (turnos[contador] && turnos[contador].length !== 0 || encuentro !== '' || desafio !== 0 || accion !== 0) {
-      setMensaje(`No puedes retornar porque estás en medio de un turno`)
-      return
-    }
-    setMensaje(`Empiezas el retorno`)
-    setRetornar(contador)
+    let retornoObj = marcarRetorno(turnos, contador, encuentro, desafio, accion)
+    setMensaje(retornoObj.mensaje)
+    setRetornar(retornoObj.contador)
   }
 
   const handleResetear = () => {
-    setMensaje(`Resetear`)
-    setBaraja(barajarBaraja(baraja_inicial))
+    setBaraja(barajarBaraja(barajaInicial()))
     setAntorchas([])
     setTurnos([])
     setContador(0)

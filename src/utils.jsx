@@ -113,3 +113,124 @@ export const barajarBaraja = (baraja) => {
   return baraja
   // return shuffleArray(baraja)
 }
+
+export const barajaInicial = () => {
+  return ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
+  '10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
+  'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
+  '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
+}
+
+export const marcarRetorno = (turnos, contador, encuentro, desafio, accion) => {
+  if (contador <= 1) {
+    return {
+      retornar: 0,
+      mensaje: `No puedes retornar porque acabas de empezar`
+    }
+  }
+  if (turnos[contador] && turnos[contador].length !== 0 || encuentro !== '' || desafio !== 0 || accion !== 0) {
+    return {
+      retornar: 0,
+      mensaje: `No puedes retornar porque estás en medio de un turno`
+    }
+  }
+  return {
+    retornar: contador,
+    mensaje: `Empiezas el retorno`
+  }
+}
+
+export const sacarCarta = (carta, encuentro, desafio) => {
+  if (carta === 'J♠' && encuentro.includes('monstruo')) {
+    return {
+      mensaje: `Mato al monstruo con mi habilidad especial de volverse berseker`,
+      quitarCartaDeMano: true,
+      pasarCartaAlTurno: true,
+      recogerTesoro: true,
+      resetearAccion: false,
+      terminarTurno: true
+    }
+  }
+  if (carta === 'J♦' && encuentro.includes('trampa')) {
+    return {
+      mensaje: `Desactivo el mecanismo con mi habilidad especial de desactivar trampas`,
+      quitarCartaDeMano: true,
+      pasarCartaAlTurno: true,
+      recogerTesoro: true,
+      resetearAccion: false,
+      terminarTurno: true
+    }
+  }
+  if (carta === 'J♣' && encuentro.includes('puerta cerrada')) {
+    return {
+      mensaje: `Abro la puerta con mi habilidad especial de abrir cerraduras`,
+      quitarCartaDeMano: true,
+      pasarCartaAlTurno: true,
+      recogerTesoro: true,
+      resetearAccion: false,
+      terminarTurno: true
+    }
+  }
+  if (carta === 'J♥' && (encuentro.includes('monstruo') || encuentro.includes('trampa'))) {
+    return {
+      mensaje: `No me hago daño con mi habilidad especial de esquivar golpe`,
+      quitarCartaDeMano: true,
+      pasarCartaAlTurno: true,
+      recogerTesoro: false,
+      resetearAccion: false,
+      terminarTurno: false
+    }
+  }
+  if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && encuentro.includes('monstruo') && desafio<valorCarta(carta)) {
+    return {
+      mensaje: `Tiro una carta de valor (${carta}) para distraer al monstruo`,
+      quitarCartaDeMano: true,
+      pasarCartaAlTurno: true,
+      recogerTesoro: false,
+      resetearAccion: false,
+      terminarTurno: true
+    }
+  }
+  return {
+    mensaje: `No tiene sentido usar esa carta`,
+    quitarCartaDeMano: false,
+    pasarCartaAlTurno: false,
+    recogerTesoro: false,
+    resetearAccion: false,
+    terminarTurno: false
+  }
+}
+
+export const pasarCartaAlTurno = (turnos, contador, carta) => {
+  let temp = [...turnos]
+  if (typeof temp[contador] === 'undefined') {
+    temp[contador] = []
+  }
+  temp[contador].push(carta)
+  return {
+    turnos: temp
+  }
+}
+
+export const descartarCartas = (baraja, antorchas, numero_de_cartas) => {
+  let eliminadas = baraja.splice(0, numero_de_cartas)
+  let antorchas_eliminadas = eliminadas.filter(eliminado => esCartaDeAntorcha(eliminado))
+  let temp = [...antorchas]
+  antorchas_eliminadas.forEach(antorcha => temp.push(antorcha))
+  return {
+    baraja: baraja,
+    antorchas: temp,
+    eliminadas: eliminadas
+  }
+}
+
+export const recogerTesoro = (turnos, contador, mano) => {
+  let tesoros = turnos[contador].filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
+  if (tesoros.length === turnos[contador].length) {
+    tesoros.sort((a, b) => valorCarta(a) - valorCarta(b))
+    tesoros.shift()
+  }
+  return {
+    mano: mano.concat(tesoros)
+  }
+}
