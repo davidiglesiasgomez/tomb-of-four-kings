@@ -12,7 +12,7 @@ export const tipoCarta = (carta) => {
     return 'Esquivar golpe';
   }
   if (carta === 'J♦') {
-    return 'Abrir cerraduras';
+    return 'Desactivar mecanismos';
   }
   let valor = carta.slice(0, -1)
   let palo = carta.slice(-1)
@@ -153,7 +153,7 @@ export const sacarCarta = (carta, encuentro, desafio) => {
   }
   if (carta === 'J♦' && encuentro.includes('trampa')) {
     return {
-      mensaje: `Desactivo el mecanismo con mi habilidad especial de desactivar trampas`,
+      mensaje: `Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos`,
       quitarCartaDeMano: true,
       pasarCartaAlTurno: true,
       recogerTesoro: true,
