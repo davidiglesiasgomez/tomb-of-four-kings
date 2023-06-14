@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -114,5 +114,22 @@ describe('Tests para la funcion recogerTesoro', () => {
   it(`Si el turno tiene una o más cartas que no sean tesoro, descartarlas`, () => {
     assert.deepEqual(recogerTesoro(['A♣', '2♠', '7♦', '2♦', 'Jk'], []), {mano: ['7♦', '2♦', 'Jk']})
     assert.deepEqual(recogerTesoro(['2♦', 'Jk', 'A♣', '2♠', '7♦'], []), {mano: ['2♦', 'Jk', '7♦']})
+  })
+})
+
+describe('Tests para la funcion jugar', () => {
+  it(`Si no hay más cartas en el mazo no se debería hacer nada`, () => {
+    let baraja = []
+    let expected = jugar(baraja)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.carta, '')
+    assert.equal(expected.pasarCartaAlTurno, false)
+  })
+  it(`Se saca la siguiente carta del mazo. Si no pasa nada, se pasa la carta al turno y nada más`, () => {
+    let baraja = ['A♥']
+    let expected = jugar(baraja)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.carta, 'A♥')
+    assert.equal(expected.pasarCartaAlTurno, true)
   })
 })

@@ -234,3 +234,25 @@ export const recogerTesoro = (turno, mano) => {
     mano: mano.concat(tesoros)
   }
 }
+
+export const jugar = (baraja) => {
+  let temp = null
+
+  if (baraja.length === 0) {
+    return {
+      baraja: baraja,
+      carta: '',
+      pasarCartaAlTurno: false
+    }
+  }
+
+  temp = [...baraja]
+  let carta = temp.shift()
+  baraja = temp
+
+  return {
+    baraja: baraja,
+    carta: carta,
+    pasarCartaAlTurno: true
+  }
+}
