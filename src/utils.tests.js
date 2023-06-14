@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -86,7 +86,33 @@ describe('Tests para la funcion valorCarta', () => {
   });
   it(`El resto de cartas tienen que valer 0`, () => {
     ['A♥', 'A♠', 'A♦', 'A♣'].forEach(value => {
-      assert.equal(valorCarta(value),0)
+      assert.equal(valorCarta(value), 0)
     })
+  })
+})
+
+describe('Tests para la funcion recogerTesoro', () => {
+  it(`Si el turno no tiene nada, devuelve vacio`, () => {
+    assert.deepEqual(recogerTesoro([], []), {mano: []})
+  })
+  it(`Si el turno no tiene tesoros que recoger, devuelve vacio`, () => {
+    assert.deepEqual(recogerTesoro(['A♥'], []), {mano: []})
+    assert.deepEqual(recogerTesoro(['2♠', '8♠', '9♠', '4♣', '5♣', '6♣', '9♣', '10♣'], []), {mano: []})
+    assert.deepEqual(recogerTesoro(['A♥', 'A♠', 'A♦', 'A♣', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣'], []), {mano: []})
+  })
+  it(`Si el turno solo tiene una carta y es un tesoro, devuelve vacio`, () => {
+    assert.deepEqual(recogerTesoro(['2♦'], []), {mano: []})
+    assert.deepEqual(recogerTesoro(['7♦'], []), {mano: []})
+    assert.deepEqual(recogerTesoro(['10♦'], []), {mano: []})
+    assert.deepEqual(recogerTesoro(['K♦'], []), {mano: []})
+    assert.deepEqual(recogerTesoro(['Jk'], []), {mano: []})
+  })
+  it(`Si el turno solo tiene cartas de tesoro, tiene que descartar la de menor valor y devolver el resto`, () => {
+    assert.deepEqual(recogerTesoro(['7♦', '2♦', 'Jk'], []), {mano: ['7♦', 'Jk']})
+    assert.deepEqual(recogerTesoro(['2♦', 'Jk', '7♦'], []), {mano: ['Jk', '7♦']})
+  })
+  it(`Si el turno tiene una o más cartas que no sean tesoro, descartarlas`, () => {
+    assert.deepEqual(recogerTesoro(['A♣', '2♠', '7♦', '2♦', 'Jk'], []), {mano: ['7♦', '2♦', 'Jk']})
+    assert.deepEqual(recogerTesoro(['2♦', 'Jk', 'A♣', '2♠', '7♦'], []), {mano: ['2♦', 'Jk', '7♦']})
   })
 })

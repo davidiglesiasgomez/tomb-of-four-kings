@@ -38,7 +38,7 @@ function App() {
   }
 
   const handleRecogerTesoro = () => {
-    let retornoObj = recogerTesoro(turnos, contador, mano)
+    let retornoObj = recogerTesoro(turnos[contador], mano)
     setMano(retornoObj.mano)
   }
 
