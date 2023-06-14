@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta } from './utils.js'
+import { tipoCarta, valorCarta } from './utils.js'
 
-describe('tipoCarta test', () => {
+describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
     assert.equal(tipoCarta('Jk'), 'Pergamino de luz')
   })
@@ -63,5 +63,30 @@ describe('tipoCarta test', () => {
       assert.doesNotMatch(tipoCarta(value), /puerta cerrada/)
     })
   })
+})
 
+describe('Tests para la funcion valorCarta', () => {
+  [{
+    carta: 'Jk',
+    valor: 6
+  }].forEach(item => {
+    it(`La carta ${item.carta} tiene que valer ${item.valor}`, () => {
+      assert.equal(valorCarta(item.carta), item.valor)
+    })
+  })
+  it('Si la carta es K, tiene que vale 10', () => {
+    ['K♥', 'K♠', 'K♦', 'K♣'].forEach(value => {
+      assert.equal(valorCarta(value), 10)
+    })
+  })
+  it('Si la carta es ♦ (pero no A, J, Q, K), tiene que valer su cifra', () => {
+    ['2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦'].forEach(value => {
+      assert.equal(valorCarta(value), /[0-9]+/.exec(value))
+    })
+  });
+  it(`El resto de cartas tienen que valer 0`, () => {
+    ['A♥', 'A♠', 'A♦', 'A♣'].forEach(value => {
+      assert.equal(valorCarta(value),0)
+    })
+  })
 })
