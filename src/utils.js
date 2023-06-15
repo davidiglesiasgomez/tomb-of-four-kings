@@ -246,6 +246,14 @@ export const jugar = (baraja, antorchas) => {
     }
   }
 
+  if (antorchas && antorchas.length === 4 && !antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
+    return {
+      baraja: baraja,
+      esFin: true,
+      mensaje: `La última antorcha se consumió. Has perdido`
+    }
+  }
+
   if (baraja.length === 0) {
     return {
       baraja: baraja,
