@@ -332,9 +332,12 @@ export const jugar = (juegoObj) => {
   }
 
   if (juegoObj.retornar !== undefined && juegoObj.retornar>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retornar - 1) {
+    console.log('juegoObj.mano', juegoObj.mano)
+    let reyes = juegoObj.mano.reduce((acc, item) => acc + ( esCartaDeTesoro(item) ? 1 : 0 ), 0)
+    let puntos = juegoObj.mano.reduce((acc, item) => acc + valorCarta(item), 0)
     juegoObj.fin = true
     juegoObj.victoria = true
-    juegoObj.mensaje = `Has regresado a la entrada de la tumba. Has ganado`
+    juegoObj.mensaje = `Has regresado a la entrada de la tumba. Has ganado. Puntuación <reyes>/<puntos>`.replace('<reyes>', reyes).replace('<puntos>', puntos)
     return juegoObj
   }
 

@@ -196,12 +196,13 @@ describe('Tests para la funcion jugar', () => {
     let juegoObj = {}
     juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
+    juegoObj.tesoro = []
     juegoObj.contador = 3
     juegoObj.retornar = 2
     let expected = jugar(juegoObj)
     assert.equal(expected.fin, true)
     assert.equal(expected.victoria, true)
-    assert.equal(expected.mensaje, `Has regresado a la entrada de la tumba. Has ganado`)
+    assert.equal(expected.mensaje, `Has regresado a la entrada de la tumba. Has ganado. Puntuación 0/0`)
   })
   it(`Si hay un encuentro y sale una carta de acción, se anota la acción`, () => {
     let juegoObj = {}
