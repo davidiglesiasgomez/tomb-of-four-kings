@@ -287,6 +287,10 @@ export const jugar = (juegoObj) => {
     juegoObj.encuentro = carta
   }
 
+  if (esCartaDePergaminoDeLuz(carta)) {
+    juegoObj.mensaje = `Ha aparecido el pergamino de luz`
+  }
+
   juegoObj.pasarCartaAlTurno = true
   juegoObj.esFin = false
   return juegoObj
