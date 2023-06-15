@@ -258,7 +258,8 @@ export const jugar = (baraja, antorchas) => {
     return {
       baraja: baraja,
       carta: '',
-      pasarCartaAlTurno: false
+      pasarCartaAlTurno: false,
+      esFin: true
     }
   }
 
@@ -269,6 +270,7 @@ export const jugar = (baraja, antorchas) => {
   return {
     baraja: baraja,
     carta: carta,
-    pasarCartaAlTurno: true
+    pasarCartaAlTurno: true,
+    esFin: false
   }
 }
