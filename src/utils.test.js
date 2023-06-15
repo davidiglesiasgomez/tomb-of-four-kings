@@ -136,7 +136,6 @@ describe('Tests para la funcion jugar', () => {
     let baraja = []
     let antorchas = ['A♥', 'A♠', 'A♦', 'A♣', 'Jk']
     let expected = jugar(baraja, antorchas)
-    assert.deepEqual(expected.baraja, baraja)
     assert.equal(expected.esFin, true)
     assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
   })
@@ -144,7 +143,6 @@ describe('Tests para la funcion jugar', () => {
     let baraja = []
     let antorchas = ['A♥', 'A♠', 'A♦', 'A♣']
     let expected = jugar(baraja, antorchas)
-    assert.deepEqual(expected.baraja, baraja)
     assert.equal(expected.esFin, true)
     assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
   })
@@ -152,7 +150,6 @@ describe('Tests para la funcion jugar', () => {
     let baraja = ['A♥']
     let antorchas = ['A♥', 'A♠', 'A♦', 'Jk']
     let expected = jugar(baraja, antorchas)
-    assert.deepEqual(expected.baraja, [])
     assert.equal(expected.esFin, false)
   })
   it(`Si los puntos de vida bajan de 2, se pierde`, () => {
@@ -169,5 +166,31 @@ describe('Tests para la funcion jugar', () => {
     let puntosVida = 2
     let expected = jugar(baraja, antorchas, puntosVida)
     assert.equal(expected.esFin, false)
+  })
+  it(`Si el retorno no está marcado, no pasa nada`, () => {
+    let baraja = ['A♥']
+    let antorchas = []
+    let contador = 2
+    let retorno = 0
+    let expected = jugar(baraja, antorchas, undefined, contador, retorno)
+    assert.equal(expected.esFin, false)
+  })
+  it(`Si el retorno está marcado y no se cumple la condición de victoria, no pasa nada`, () => {
+    let baraja = ['A♥']
+    let antorchas = []
+    let contador = 2
+    let retorno = 2
+    let expected = jugar(baraja, antorchas, undefined, contador, retorno)
+    assert.equal(expected.esFin, false)
+  })
+  it(`Si el retorno está marcado y se cumple la condición de victoria, se deberia ganar`, () => {
+    let baraja = ['A♥']
+    let antorchas = []
+    let contador = 3
+    let retorno = 2
+    let expected = jugar(baraja, antorchas, undefined, contador, retorno)
+    assert.equal(expected.esFin, true)
+    assert.equal(expected.esVictoria, true)
+    assert.equal(expected.mensaje, `Has regresado a la entrada de la tumba. Has ganado`)
   })
 })

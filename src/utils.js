@@ -235,12 +235,11 @@ export const recogerTesoro = (turno, mano) => {
   }
 }
 
-export const jugar = (baraja, antorchas, puntosVida) => {
+export const jugar = (baraja, antorchas, puntosVida, contador, retorno) => {
   let temp = null
 
   if (antorchas && antorchas.length === 5) {
     return {
-      baraja: baraja,
       esFin: true,
       mensaje: `La última antorcha se consumió. Has perdido`
     }
@@ -248,7 +247,6 @@ export const jugar = (baraja, antorchas, puntosVida) => {
 
   if (antorchas && antorchas.length === 4 && !antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
     return {
-      baraja: baraja,
       esFin: true,
       mensaje: `La última antorcha se consumió. Has perdido`
     }
@@ -256,9 +254,16 @@ export const jugar = (baraja, antorchas, puntosVida) => {
 
   if (puntosVida && puntosVida < 2) {
     return {
-      baraja: baraja,
       esFin: true,
       mensaje: `Has muerto. Has perdido`
+    }
+  }
+
+  if (retorno && retorno>1 && contador === 2 * retorno - 1) {
+    return {
+      esFin: true,
+      esVictoria: true,
+      mensaje: `Has regresado a la entrada de la tumba. Has ganado`
     }
   }
 
