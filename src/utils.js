@@ -238,6 +238,7 @@ export const recogerTesoro = (turno, mano) => {
 export const jugar = (juegoObj) => {
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
+  juegoObj.pasarCartaAlTurno = false
 
   if (juegoObj.antorchas !== undefined && juegoObj.antorchas.length === 5) {
     juegoObj.esFin = true
@@ -266,7 +267,6 @@ export const jugar = (juegoObj) => {
 
   if (juegoObj.baraja.length === 0) {
     juegoObj.carta = ''
-    juegoObj.pasarCartaAlTurno = false
     juegoObj.esFin = true
     return juegoObj
   }
@@ -298,6 +298,12 @@ export const jugar = (juegoObj) => {
 
   if (esCartaDeTesoro(carta)) {
     juegoObj.mensaje = `Ha aparecido un tesoro de los reyes`
+  }
+
+  if (esCartaDeHabilidad(carta)) {
+    juegoObj.mensaje = `Me acabo de encontrar una nueva habilidad`
+    juegoObj.pasarCartaALaMano = true
+    return juegoObj
   }
 
   juegoObj.pasarCartaAlTurno = true

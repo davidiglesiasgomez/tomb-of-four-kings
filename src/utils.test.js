@@ -263,4 +263,13 @@ describe('Tests para la funcion jugar', () => {
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.mensaje, `Ha aparecido un tesoro de los reyes`)
   })
+  it(`Si sale una carta de habilidad, se avisa y se pasa a la mano`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['J♥']
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.pasarCartaALaMano, true)
+    assert.equal(expected.pasarCartaAlTurno, false)
+    assert.equal(expected.mensaje, `Me acabo de encontrar una nueva habilidad`)
+  })
 })
