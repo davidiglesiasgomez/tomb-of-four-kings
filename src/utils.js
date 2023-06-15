@@ -296,6 +296,10 @@ export const jugar = (juegoObj) => {
     juegoObj.esFavorDivino = true
   }
 
+  if (esCartaDeTesoro(carta)) {
+    juegoObj.mensaje = `Ha aparecido un tesoro de los reyes`
+  }
+
   juegoObj.pasarCartaAlTurno = true
   juegoObj.esFin = false
   return juegoObj
