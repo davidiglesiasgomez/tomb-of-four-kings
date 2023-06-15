@@ -128,10 +128,10 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Se saca la siguiente carta del mazo. Si no pasa nada, se pasa la carta al turno y nada más`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
-    assert.equal(expected.carta, 'A♥')
+    assert.equal(expected.carta, '2♥')
     assert.equal(expected.pasarCartaAlTurno, true)
   })
   it(`Si hay 5 cartas en antorchas, se pierde`, () => {
@@ -152,14 +152,14 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si hay 4 cartas en antorchas y una es el pergamino de luz, no pasa nada`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'Jk']
     let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
   it(`Si los puntos de vida bajan de 2, se pierde`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.puntosVida = 1
     let expected = jugar(juegoObj)
@@ -168,7 +168,7 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si los puntos de vida no bajan de 2, no pasa nada`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.puntosVida = 2
     let expected = jugar(juegoObj)
@@ -176,7 +176,7 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si el retorno no está marcado, no pasa nada`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.contador = 2
     juegoObj.retorno = 0
@@ -185,7 +185,7 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si el retorno está marcado y no se cumple la condición de victoria, no pasa nada`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.contador = 2
     juegoObj.retorno = 2
@@ -194,7 +194,7 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si el retorno está marcado y se cumple la condición de victoria, se deberia ganar`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.contador = 3
     juegoObj.retorno = 2
@@ -218,7 +218,7 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si hay un encuentro y no sale una carta de acción, no se anota la acción`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.encuentro = '2♠'
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
@@ -227,7 +227,7 @@ describe('Tests para la funcion jugar', () => {
   })
   it(`Si no hay un encuentro y no sale una carta de encuentro, no se anota el encuentro`, () => {
     let juegoObj = {}
-    juegoObj.baraja = ['A♥']
+    juegoObj.baraja = ['2♥']
     juegoObj.encuentro = ''
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
@@ -271,5 +271,34 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.pasarCartaALaMano, true)
     assert.equal(expected.pasarCartaAlTurno, false)
     assert.equal(expected.mensaje, `Me acabo de encontrar una nueva habilidad`)
+  })
+  it(`Si sale una carta de antorcha, y no es la última, se avisa y se pasa a las antorchas`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = []
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.deepEqual(expected.antorchas, ['A♥'])
+    assert.equal(expected.mensaje, `Me acaba de arder una antorcha`)
+  })
+  it(`Si sale una carta de antorcha, y es la última, se avisa y se pasa a las antorchas`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = ['A♠', 'A♦', 'A♣']
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.deepEqual(expected.antorchas, ['A♠', 'A♦', 'A♣', 'A♥'])
+    assert.equal(expected.mensaje, `Me acaba de arder la última antorcha`)
+  })
+  it(`Si sale la última carta de antorcha, pero se tiene el pergamino de luz en la mano, se avisa, se pasa el pergamino de luz a las antorchas y se devuelve la antorcha al final de la baraja`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥', '2♥']
+    juegoObj.antorchas = ['A♠', 'A♦', 'A♣']
+    juegoObj.mano = ['Jk']
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, ['2♥', 'A♥'])
+    assert.deepEqual(expected.antorchas, ['A♠', 'A♦', 'A♣', 'Jk'])
+    assert.deepEqual(expected.mano, [])
+    assert.equal(expected.mensaje, `La última antorcha se iba a consumir. Por suerte, posees el pergamino de luz. La última antorcha pasa al fondo del mazo de cartas`)
   })
 })

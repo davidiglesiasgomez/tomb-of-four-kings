@@ -236,6 +236,9 @@ export const recogerTesoro = (turno, mano) => {
 }
 
 export const jugar = (juegoObj) => {
+  juegoObj.baraja = juegoObj.baraja ?? []
+  juegoObj.antorchas = juegoObj.antorchas ?? []
+  juegoObj.mano = juegoObj.mano ?? []
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
   juegoObj.pasarCartaAlTurno = false
@@ -303,6 +306,26 @@ export const jugar = (juegoObj) => {
   if (esCartaDeHabilidad(carta)) {
     juegoObj.mensaje = `Me acabo de encontrar una nueva habilidad`
     juegoObj.pasarCartaALaMano = true
+    return juegoObj
+  }
+
+  if (esCartaDeAntorcha(carta) && juegoObj.antorchas.length === 3 && juegoObj.mano.some(carta => esCartaDePergaminoDeLuz(carta))) {
+    juegoObj.mensaje = `La última antorcha se iba a consumir. Por suerte, posees el pergamino de luz. La última antorcha pasa al fondo del mazo de cartas`
+    juegoObj.baraja = [...juegoObj.baraja].concat(carta)
+    juegoObj.antorchas = [...juegoObj.antorchas].concat('Jk')
+    juegoObj.mano = [...juegoObj.mano].filter(item => !esCartaDePergaminoDeLuz(item))
+    return juegoObj
+  }
+
+  if (esCartaDeAntorcha(carta) && juegoObj.antorchas.filter(antorcha => esCartaDeAntorcha(antorcha)).length === 3) {
+    juegoObj.mensaje = `Me acaba de arder la última antorcha`
+    juegoObj.antorchas = [...juegoObj.antorchas].concat(carta)
+    return juegoObj
+  }
+
+  if (esCartaDeAntorcha(carta)) {
+    juegoObj.mensaje = `Me acaba de arder una antorcha`
+    juegoObj.antorchas = [...juegoObj.antorchas].concat(carta)
     return juegoObj
   }
 
