@@ -63,6 +63,12 @@ export const esCartaDeEncuentro = (carta) => {
 
 export const esCartaDeAccion = (carta) => esCartaDeEncuentro(carta)
 
+export const esCartaDeMonstruo = (carta) => {
+  let valor = carta.slice(0, -1)
+  let palo = carta.slice(-1)
+  return ( ['2', '3', '4', '5', '6', '7', '8', '9', '10'].includes(valor) && '♠' === palo ? true : false )
+}
+
 export const esCartaDeAntorcha = (carta) => {
   let valor = carta.slice(0, -1)
   return ( valor === 'A' ? true : false )
@@ -242,6 +248,13 @@ export const jugar = (juegoObj) => {
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
   juegoObj.pasarCartaAlTurno = false
+
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeMonstruo(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
+    juegoObj.recogerTesoro = true
+    juegoObj.terminarTurno = true
+    juegoObj.mensaje = `Maté al monstruo gracias al favor divino`
+    return juegoObj
+  }
 
   if (juegoObj.antorchas !== undefined && juegoObj.antorchas.length === 5) {
     juegoObj.esFin = true
