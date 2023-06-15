@@ -132,4 +132,12 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.carta, 'A♥')
     assert.equal(expected.pasarCartaAlTurno, true)
   })
+  it(`Si hay 5 cartas en antorchas, se pierde`, () => {
+    let baraja = []
+    let antorchas = ['A♥', 'A♠', 'A♦', 'A♣', 'Jk']
+    let expected = jugar(baraja, antorchas)
+    assert.deepEqual(expected.baraja, baraja)
+    assert.equal(expected.esFin, true)
+    assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
+  })
 })
