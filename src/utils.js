@@ -331,7 +331,7 @@ export const jugar = (juegoObj) => {
     return juegoObj
   }
 
-  if (juegoObj.retorno !== undefined && juegoObj.retorno>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retorno - 1) {
+  if (juegoObj.retornar !== undefined && juegoObj.retornar>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retornar - 1) {
     juegoObj.esFin = true
     juegoObj.esVictoria = true
     juegoObj.mensaje = `Has regresado a la entrada de la tumba. Has ganado`

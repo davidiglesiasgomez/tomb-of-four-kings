@@ -174,30 +174,30 @@ describe('Tests para la funcion jugar', () => {
     let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
-  it(`Si el retorno no está marcado, no pasa nada`, () => {
+  it(`Si el retornar no está marcado, no pasa nada`, () => {
     let juegoObj = {}
     juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.contador = 2
-    juegoObj.retorno = 0
+    juegoObj.retornar = 0
     let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
-  it(`Si el retorno está marcado y no se cumple la condición de victoria, no pasa nada`, () => {
+  it(`Si el retornar está marcado y no se cumple la condición de victoria, no pasa nada`, () => {
     let juegoObj = {}
     juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.contador = 2
-    juegoObj.retorno = 2
+    juegoObj.retornar = 2
     let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
-  it(`Si el retorno está marcado y se cumple la condición de victoria, se deberia ganar`, () => {
+  it(`Si el retornar está marcado y se cumple la condición de victoria, se deberia ganar`, () => {
     let juegoObj = {}
     juegoObj.baraja = ['2♥']
     juegoObj.antorchas = []
     juegoObj.contador = 3
-    juegoObj.retorno = 2
+    juegoObj.retornar = 2
     let expected = jugar(juegoObj)
     assert.equal(expected.esFin, true)
     assert.equal(expected.esVictoria, true)
