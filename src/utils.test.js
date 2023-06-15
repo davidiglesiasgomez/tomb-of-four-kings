@@ -253,7 +253,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.baraja = ['Q♥']
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
-    assert.equal(expected.esFavorDivino, true)
+    assert.equal(expected.favorDivino, true)
     assert.equal(expected.mensaje, `La diosa me bendice con el favor divino`)
   })
   it(`Si sale una carta de tesoro, se avisa`, () => {
@@ -305,7 +305,7 @@ describe('Tests para la funcion jugar', () => {
   it(`Si hay encuentro de monstruo y favor divino, se recoge el tesoro y se termina el turno`, () => {
     let juegoObj = {}
     juegoObj.encuentro = '2♠'
-    juegoObj.esFavorDivino = true
+    juegoObj.favorDivino = true
     let expected = jugar(juegoObj)
     assert.equal(expected.recogerTesoro, true)
     assert.equal(expected.terminarTurno, true)
@@ -315,7 +315,7 @@ describe('Tests para la funcion jugar', () => {
   it(`Si hay encuentro de trampa y favor divino, se recoge el tesoro y se termina el turno`, () => {
     let juegoObj = {}
     juegoObj.encuentro = '2♦'
-    juegoObj.esFavorDivino = true
+    juegoObj.favorDivino = true
     let expected = jugar(juegoObj)
     assert.equal(expected.recogerTesoro, true)
     assert.equal(expected.terminarTurno, true)
@@ -325,7 +325,7 @@ describe('Tests para la funcion jugar', () => {
   it(`Si hay encuentro de puerta y favor divino, se recoge el tesoro y se termina el turno`, () => {
     let juegoObj = {}
     juegoObj.encuentro = '2♣'
-    juegoObj.esFavorDivino = true
+    juegoObj.favorDivino = true
     let expected = jugar(juegoObj)
     assert.equal(expected.recogerTesoro, true)
     assert.equal(expected.terminarTurno, true)

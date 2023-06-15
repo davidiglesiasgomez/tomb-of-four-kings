@@ -271,7 +271,7 @@ export const jugar = (juegoObj) => {
   juegoObj.esFin = false
   juegoObj.esVictoria = false
 
-  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.favorDivino === true) {
     juegoObj.recogerTesoro = true
     juegoObj.terminarTurno = true
     juegoObj.mensaje = ''
@@ -366,7 +366,7 @@ export const jugar = (juegoObj) => {
 
   if (esCartaDeFavorDivino(carta)) {
     juegoObj.mensaje = `La diosa me bendice con el favor divino`
-    juegoObj.esFavorDivino = true
+    juegoObj.favorDivino = true
   }
 
   if (esCartaDeTesoro(carta)) {
