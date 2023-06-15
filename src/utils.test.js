@@ -311,4 +311,14 @@ describe('Tests para la funcion jugar', () => {
     assert.match(expected.mensaje, /monstruo/)
     assert.match(expected.mensaje, /divino/)
   })
+  it(`Si hay encuentro de trampa y favor divino, se recoge el tesoro y se termina el turno`, () => {
+    let juegoObj = {}
+    juegoObj.encuentro = '2♦'
+    juegoObj.esFavorDivino = true
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, true)
+    assert.equal(expected.terminarTurno, true)
+    assert.match(expected.mensaje, /trampa/)
+    assert.match(expected.mensaje, /divino/)
+  })
 })
