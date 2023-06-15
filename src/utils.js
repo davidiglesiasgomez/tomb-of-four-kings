@@ -235,7 +235,7 @@ export const recogerTesoro = (turno, mano) => {
   }
 }
 
-export const jugar = (baraja, antorchas) => {
+export const jugar = (baraja, antorchas, puntosVida) => {
   let temp = null
 
   if (antorchas && antorchas.length === 5) {
@@ -251,6 +251,14 @@ export const jugar = (baraja, antorchas) => {
       baraja: baraja,
       esFin: true,
       mensaje: `La última antorcha se consumió. Has perdido`
+    }
+  }
+
+  if (puntosVida && puntosVida < 2) {
+    return {
+      baraja: baraja,
+      esFin: true,
+      mensaje: `Has muerto. Has perdido`
     }
   }
 

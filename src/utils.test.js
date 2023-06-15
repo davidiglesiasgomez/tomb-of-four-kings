@@ -155,4 +155,19 @@ describe('Tests para la funcion jugar', () => {
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.esFin, false)
   })
+  it(`Si los puntos de vida bajan de 2, se pierde`, () => {
+    let baraja = ['A♥']
+    let antorchas = []
+    let puntosVida = 1
+    let expected = jugar(baraja, antorchas, puntosVida)
+    assert.equal(expected.esFin, true)
+    assert.equal(expected.mensaje, `Has muerto. Has perdido`)
+  })
+  it(`Si los puntos de vida no bajan de 2, no pasa nada`, () => {
+    let baraja = ['A♥']
+    let antorchas = []
+    let puntosVida = 2
+    let expected = jugar(baraja, antorchas, puntosVida)
+    assert.equal(expected.esFin, false)
+  })
 })
