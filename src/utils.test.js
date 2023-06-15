@@ -139,7 +139,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.baraja = []
     juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'A♣', 'Jk']
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, true)
+    assert.equal(expected.fin, true)
     assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
   })
   it(`Si hay 4 cartas en antorchas y ninguna es el pergamino de luz, se pierde`, () => {
@@ -147,7 +147,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.baraja = []
     juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'A♣']
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, true)
+    assert.equal(expected.fin, true)
     assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
   })
   it(`Si hay 4 cartas en antorchas y una es el pergamino de luz, no pasa nada`, () => {
@@ -155,7 +155,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.baraja = ['2♥']
     juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'Jk']
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, false)
+    assert.equal(expected.fin, false)
   })
   it(`Si los puntos de vida bajan de 2, se pierde`, () => {
     let juegoObj = {}
@@ -163,7 +163,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.antorchas = []
     juegoObj.puntosVida = 1
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, true)
+    assert.equal(expected.fin, true)
     assert.equal(expected.mensaje, `Has muerto. Has perdido`)
   })
   it(`Si los puntos de vida no bajan de 2, no pasa nada`, () => {
@@ -172,7 +172,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.antorchas = []
     juegoObj.puntosVida = 2
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, false)
+    assert.equal(expected.fin, false)
   })
   it(`Si el retornar no está marcado, no pasa nada`, () => {
     let juegoObj = {}
@@ -181,7 +181,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.contador = 2
     juegoObj.retornar = 0
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, false)
+    assert.equal(expected.fin, false)
   })
   it(`Si el retornar está marcado y no se cumple la condición de victoria, no pasa nada`, () => {
     let juegoObj = {}
@@ -190,7 +190,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.contador = 2
     juegoObj.retornar = 2
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, false)
+    assert.equal(expected.fin, false)
   })
   it(`Si el retornar está marcado y se cumple la condición de victoria, se deberia ganar`, () => {
     let juegoObj = {}
@@ -199,7 +199,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.contador = 3
     juegoObj.retornar = 2
     let expected = jugar(juegoObj)
-    assert.equal(expected.esFin, true)
+    assert.equal(expected.fin, true)
     assert.equal(expected.esVictoria, true)
     assert.equal(expected.mensaje, `Has regresado a la entrada de la tumba. Has ganado`)
   })
@@ -214,7 +214,7 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.carta, '3♠')
     assert.match(expected.mensaje, /Contrarresto/)
     assert.equal(expected.pasarCartaAlTurno, true)
-    assert.equal(expected.esFin, false)
+    assert.equal(expected.fin, false)
   })
   it(`Si hay un encuentro y no sale una carta de acción, no se anota la acción`, () => {
     let juegoObj = {}

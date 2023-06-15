@@ -269,7 +269,7 @@ export const jugar = (juegoObj) => {
   juegoObj.terminarTurno = false
   juegoObj.pasarCartaAlTurno = false
   juegoObj.recogerTesoro = false
-  juegoObj.esFin = false
+  juegoObj.fin = false
   juegoObj.esVictoria = false
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.favorDivino === true) {
@@ -314,25 +314,25 @@ export const jugar = (juegoObj) => {
   }
 
   if (juegoObj.antorchas !== undefined && juegoObj.antorchas.length === 5) {
-    juegoObj.esFin = true
+    juegoObj.fin = true
     juegoObj.mensaje = `La última antorcha se consumió. Has perdido`
     return juegoObj
   }
 
   if (juegoObj.antorchas !== undefined && juegoObj.antorchas.length === 4 && !juegoObj.antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
-    juegoObj.esFin = true
+    juegoObj.fin = true
     juegoObj.mensaje = `La última antorcha se consumió. Has perdido`
     return juegoObj
   }
 
   if (juegoObj.puntosVida !== undefined && juegoObj.puntosVida < 2) {
-    juegoObj.esFin = true
+    juegoObj.fin = true
     juegoObj.mensaje = `Has muerto. Has perdido`
     return juegoObj
   }
 
   if (juegoObj.retornar !== undefined && juegoObj.retornar>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retornar - 1) {
-    juegoObj.esFin = true
+    juegoObj.fin = true
     juegoObj.esVictoria = true
     juegoObj.mensaje = `Has regresado a la entrada de la tumba. Has ganado`
     return juegoObj
@@ -340,7 +340,7 @@ export const jugar = (juegoObj) => {
 
   if (juegoObj.baraja.length === 0) {
     juegoObj.carta = ''
-    juegoObj.esFin = true
+    juegoObj.fin = true
     return juegoObj
   }
 
