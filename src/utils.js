@@ -235,31 +235,29 @@ export const recogerTesoro = (turno, mano) => {
   }
 }
 
-export const jugar = (baraja, antorchas, puntosVida, contador, retorno) => {
-  let temp = null
-
-  if (antorchas && antorchas.length === 5) {
+export const jugar = (juegoObj) => {
+  if (juegoObj.antorchas && juegoObj.antorchas.length === 5) {
     return {
       esFin: true,
       mensaje: `La última antorcha se consumió. Has perdido`
     }
   }
 
-  if (antorchas && antorchas.length === 4 && !antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
+  if (juegoObj.antorchas && juegoObj.antorchas.length === 4 && !juegoObj.antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
     return {
       esFin: true,
       mensaje: `La última antorcha se consumió. Has perdido`
     }
   }
 
-  if (puntosVida && puntosVida < 2) {
+  if (juegoObj.puntosVida && juegoObj.puntosVida < 2) {
     return {
       esFin: true,
       mensaje: `Has muerto. Has perdido`
     }
   }
 
-  if (retorno && retorno>1 && contador === 2 * retorno - 1) {
+  if (juegoObj.retorno && juegoObj.retorno>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retorno - 1) {
     return {
       esFin: true,
       esVictoria: true,
@@ -267,21 +265,23 @@ export const jugar = (baraja, antorchas, puntosVida, contador, retorno) => {
     }
   }
 
-  if (baraja.length === 0) {
+  if (juegoObj.baraja.length === 0) {
     return {
-      baraja: baraja,
+      baraja: juegoObj.baraja,
       carta: '',
       pasarCartaAlTurno: false,
       esFin: true
     }
   }
 
-  temp = [...baraja]
+  let temp = null
+
+  temp = [...juegoObj.baraja]
   let carta = temp.shift()
-  baraja = temp
+  juegoObj.baraja = temp
 
   return {
-    baraja: baraja,
+    baraja: juegoObj.baraja,
     carta: carta,
     pasarCartaAlTurno: true,
     esFin: false

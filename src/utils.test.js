@@ -119,76 +119,86 @@ describe('Tests para la funcion recogerTesoro', () => {
 
 describe('Tests para la funcion jugar', () => {
   it(`Si no hay más cartas en el mazo no se debería hacer nada`, () => {
-    let baraja = []
-    let expected = jugar(baraja)
+    let juegoObj = {}
+    juegoObj.baraja = []
+    let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.carta, '')
     assert.equal(expected.pasarCartaAlTurno, false)
   })
   it(`Se saca la siguiente carta del mazo. Si no pasa nada, se pasa la carta al turno y nada más`, () => {
-    let baraja = ['A♥']
-    let expected = jugar(baraja)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.carta, 'A♥')
     assert.equal(expected.pasarCartaAlTurno, true)
   })
   it(`Si hay 5 cartas en antorchas, se pierde`, () => {
-    let baraja = []
-    let antorchas = ['A♥', 'A♠', 'A♦', 'A♣', 'Jk']
-    let expected = jugar(baraja, antorchas)
+    let juegoObj = {}
+    juegoObj.baraja = []
+    juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'A♣', 'Jk']
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, true)
     assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
   })
   it(`Si hay 4 cartas en antorchas y ninguna es el pergamino de luz, se pierde`, () => {
-    let baraja = []
-    let antorchas = ['A♥', 'A♠', 'A♦', 'A♣']
-    let expected = jugar(baraja, antorchas)
+    let juegoObj = {}
+    juegoObj.baraja = []
+    juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'A♣']
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, true)
     assert.equal(expected.mensaje, `La última antorcha se consumió. Has perdido`)
   })
   it(`Si hay 4 cartas en antorchas y una es el pergamino de luz, no pasa nada`, () => {
-    let baraja = ['A♥']
-    let antorchas = ['A♥', 'A♠', 'A♦', 'Jk']
-    let expected = jugar(baraja, antorchas)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = ['A♥', 'A♠', 'A♦', 'Jk']
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
   it(`Si los puntos de vida bajan de 2, se pierde`, () => {
-    let baraja = ['A♥']
-    let antorchas = []
-    let puntosVida = 1
-    let expected = jugar(baraja, antorchas, puntosVida)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = []
+    juegoObj.puntosVida = 1
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, true)
     assert.equal(expected.mensaje, `Has muerto. Has perdido`)
   })
   it(`Si los puntos de vida no bajan de 2, no pasa nada`, () => {
-    let baraja = ['A♥']
-    let antorchas = []
-    let puntosVida = 2
-    let expected = jugar(baraja, antorchas, puntosVida)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = []
+    juegoObj.puntosVida = 2
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
   it(`Si el retorno no está marcado, no pasa nada`, () => {
-    let baraja = ['A♥']
-    let antorchas = []
-    let contador = 2
-    let retorno = 0
-    let expected = jugar(baraja, antorchas, undefined, contador, retorno)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = []
+    juegoObj.contador = 2
+    juegoObj.retorno = 0
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
   it(`Si el retorno está marcado y no se cumple la condición de victoria, no pasa nada`, () => {
-    let baraja = ['A♥']
-    let antorchas = []
-    let contador = 2
-    let retorno = 2
-    let expected = jugar(baraja, antorchas, undefined, contador, retorno)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = []
+    juegoObj.contador = 2
+    juegoObj.retorno = 2
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, false)
   })
   it(`Si el retorno está marcado y se cumple la condición de victoria, se deberia ganar`, () => {
-    let baraja = ['A♥']
-    let antorchas = []
-    let contador = 3
-    let retorno = 2
-    let expected = jugar(baraja, antorchas, undefined, contador, retorno)
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.antorchas = []
+    juegoObj.contador = 3
+    juegoObj.retorno = 2
+    let expected = jugar(juegoObj)
     assert.equal(expected.esFin, true)
     assert.equal(expected.esVictoria, true)
     assert.equal(expected.mensaje, `Has regresado a la entrada de la tumba. Has ganado`)
