@@ -236,6 +236,8 @@ export const recogerTesoro = (turno, mano) => {
 }
 
 export const jugar = (juegoObj) => {
+  juegoObj.accion = juegoObj.accion ?? ''
+
   if (juegoObj.antorchas && juegoObj.antorchas.length === 5) {
     juegoObj.esFin = true
     juegoObj.mensaje = `La última antorcha se consumió. Has perdido`
@@ -274,6 +276,11 @@ export const jugar = (juegoObj) => {
   let carta = temp.shift()
   juegoObj.carta = carta
   juegoObj.baraja = temp
+
+  if (juegoObj.encuentro && juegoObj.encuentro !== '' && esCartaDeAccion(carta)) {
+    juegoObj.mensaje = `Contrarresto`
+    juegoObj.accion = carta
+  }
 
   juegoObj.pasarCartaAlTurno = true
   juegoObj.esFin = false

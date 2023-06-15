@@ -203,4 +203,26 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.esVictoria, true)
     assert.equal(expected.mensaje, `Has regresado a la entrada de la tumba. Has ganado`)
   })
+  it(`Si hay un encuentro y sale una carta de acción, se anota la acción`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['3♠']
+    juegoObj.encuentro = '2♠'
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.encuentro, '2♠')
+    assert.equal(expected.accion, '3♠')
+    assert.equal(expected.carta, '3♠')
+    assert.equal(expected.mensaje, `Contrarresto`)
+    assert.equal(expected.pasarCartaAlTurno, true)
+    assert.equal(expected.esFin, false)
+  })
+  it(`Si hay un encuentro y no sale una carta de acción, no se anota la acción`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.encuentro = '2♠'
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.encuentro, '2♠')
+    assert.equal(expected.accion, '')
+  })
 })
