@@ -46,6 +46,10 @@ function App() {
   }
 
   const handleGame = () => {
+    if (fin) {
+      return
+    }
+
     let juegoObj = {}
     juegoObj.baraja = baraja
     juegoObj.antorchas = antorchas
@@ -59,6 +63,7 @@ function App() {
     juegoObj.puntosVida = puntosVida
     juegoObj.retornar = retornar
     juegoObj.fin = fin
+
     let retornoObj = jugar(juegoObj)
     setBaraja(retornoObj.baraja)
     setAntorchas(retornoObj.antorchas)
@@ -72,8 +77,10 @@ function App() {
     setPuntosVida(retornoObj.puntosVida)
     setRetornar(retornoObj.retonar)
     setFin(retornoObj.fin)
+    setMensaje(retornoObj.mensaje)
+    if (retornoObj.pasarCartaAlTurno) handlePasarCartaAlTurno(retornoObj.carta)
     if (retornoObj.esVictoria) confetti()
-    if (!retornoObj.terminarTurno) handleContinuarTurno()
+    if (retornoObj.continuarTurno) handleContinuarTurno()
     if (retornoObj.terminarTurno) handleTerminarTurno()
   }
 

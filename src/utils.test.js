@@ -212,7 +212,7 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.encuentro, '2♠')
     assert.equal(expected.accion, '3♠')
     assert.equal(expected.carta, '3♠')
-    assert.equal(expected.mensaje, `Contrarresto`)
+    assert.match(expected.mensaje, /Contrarresto/)
     assert.equal(expected.pasarCartaAlTurno, true)
     assert.equal(expected.esFin, false)
   })

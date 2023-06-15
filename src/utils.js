@@ -269,6 +269,7 @@ export const jugar = (juegoObj) => {
   juegoObj.pasarCartaAlTurno = false
   juegoObj.recogerTesoro = false
   juegoObj.esFin = false
+  juegoObj.esVictoria = false
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
     juegoObj.recogerTesoro = true
@@ -350,11 +351,12 @@ export const jugar = (juegoObj) => {
   juegoObj.baraja = temp
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeAccion(carta)) {
-    juegoObj.mensaje = `Contrarresto`
+    juegoObj.mensaje = `Contrarresto con una acción`
     juegoObj.accion = carta
   }
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro === '' && esCartaDeEncuentro(carta)) {
+    juegoObj.mensaje = `Ha aparecido ` + tipoCarta(carta)
     juegoObj.encuentro = carta
   }
 
