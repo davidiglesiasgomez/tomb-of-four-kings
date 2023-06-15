@@ -331,4 +331,34 @@ describe('Tests para la funcion jugar', () => {
     assert.match(expected.mensaje, /puerta/)
     assert.match(expected.mensaje, /divino/)
   })
+  it(`Si hay encuentro de monstruo y la accion es mayor o igual, se recoge el tesoro y se termina el turno`, () => {
+    let juegoObj = {}
+    juegoObj.encuentro = '2♠'
+    juegoObj.accion = '3♠'
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, true)
+    assert.equal(expected.terminarTurno, true)
+    assert.match(expected.mensaje, /monstruo/)
+    assert.match(expected.mensaje, /acción/)
+  })
+  it(`Si hay encuentro de trampa y la accion es mayor o igual, se recoge el tesoro y se termina el turno`, () => {
+    let juegoObj = {}
+    juegoObj.encuentro = '2♦'
+    juegoObj.accion = '3♦'
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, true)
+    assert.equal(expected.terminarTurno, true)
+    assert.match(expected.mensaje, /trampa/)
+    assert.match(expected.mensaje, /acción/)
+  })
+  it(`Si hay encuentro de puerta y la accion es mayor o igual, se recoge el tesoro y se termina el turno`, () => {
+    let juegoObj = {}
+    juegoObj.encuentro = '2♣'
+    juegoObj.accion = '3♣'
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, true)
+    assert.equal(expected.terminarTurno, true)
+    assert.match(expected.mensaje, /puerta/)
+    assert.match(expected.mensaje, /acción/)
+  })
 })

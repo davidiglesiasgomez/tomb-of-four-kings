@@ -55,6 +55,11 @@ export const valorCarta = (carta) => {
   return 0;
 }
 
+export const numeroCarta = (carta) => {
+  let valor = carta.slice(0, -1)
+  return parseInt(valor)
+}
+
 export const esCartaDeEncuentro = (carta) => {
   let valor = carta.slice(0, -1)
   let palo = carta.slice(-1)
@@ -261,24 +266,23 @@ export const jugar = (juegoObj) => {
   juegoObj.accion = juegoObj.accion ?? ''
   juegoObj.pasarCartaAlTurno = false
 
-  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeMonstruo(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
     juegoObj.recogerTesoro = true
     juegoObj.terminarTurno = true
-    juegoObj.mensaje = `Maté al monstruo gracias al favor divino`
+    juegoObj.mensaje = ''
+    juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias al favor divino` : juegoObj.mensaje )
+    juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias al favor divino` : juegoObj.mensaje )
+    juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias al favor divino` : juegoObj.mensaje )
     return juegoObj
   }
 
-  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeTrampa(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && juegoObj.accion !== undefined && juegoObj.accion !== '' && numeroCarta(juegoObj.encuentro)<=numeroCarta(juegoObj.accion)) {
     juegoObj.recogerTesoro = true
     juegoObj.terminarTurno = true
-    juegoObj.mensaje = `Desactivé la trampa gracias al favor divino`
-    return juegoObj
-  }
-
-  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDePuerta(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
-    juegoObj.recogerTesoro = true
-    juegoObj.terminarTurno = true
-    juegoObj.mensaje = `Abrí la puerta gracias al favor divino`
+    juegoObj.mensaje = ''
+    juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias a mi acción` : juegoObj.mensaje )
+    juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias a mi acción` : juegoObj.mensaje )
+    juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias a mi acción` : juegoObj.mensaje )
     return juegoObj
   }
 
