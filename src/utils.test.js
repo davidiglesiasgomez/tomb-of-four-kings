@@ -271,7 +271,7 @@ describe('Tests para la funcion jugar', () => {
     assert.deepEqual(expected.baraja, [])
     assert.deepEqual(expected.mano, ['J♥'])
     assert.equal(expected.pasarCartaAlTurno, false)
-    assert.equal(expected.mensaje, `Me acabo de encontrar una nueva habilidad`)
+    assert.equal(expected.mensaje, `Me acabo de encontrar una nueva habilidad <carta> <tipo>`.replace('<carta>', 'J♥').replace('<tipo>', tipoCarta('J♥')))
   })
   it(`Si sale una carta de antorcha, y no es la última, se avisa y se pasa a las antorchas`, () => {
     let juegoObj = {}
@@ -369,6 +369,7 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.puntosVida = 10
     let expected = jugar(juegoObj)
     assert.equal(expected.recogerTesoro, false)
+    assert.equal(expected.continuarTurno, true)
     assert.equal(expected.terminarTurno, false)
     assert.equal(expected.puntosVida, 8)
     assert.match(expected.mensaje, /monstruo/)

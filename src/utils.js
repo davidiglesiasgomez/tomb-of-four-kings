@@ -265,6 +265,7 @@ export const jugar = (juegoObj) => {
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
 
+  juegoObj.continuarTurno = false
   juegoObj.terminarTurno = false
   juegoObj.pasarCartaAlTurno = false
   juegoObj.recogerTesoro = false
@@ -295,7 +296,7 @@ export const jugar = (juegoObj) => {
     juegoObj.recogerTesoro = false
     let diferencia = numeroCarta(juegoObj.encuentro) - numeroCarta(juegoObj.accion)
     if (esCartaDeMonstruo(juegoObj.encuentro)) {
-      juegoObj.terminarTurno = false
+      juegoObj.continuarTurno = true
       juegoObj.puntosVida = juegoObj.puntosVida - diferencia
       juegoObj.mensaje = `El monstruo me atacó y perdí ${diferencia} puntos de vida`
     } else if (esCartaDeTrampa(juegoObj.encuentro)) {
@@ -374,7 +375,7 @@ export const jugar = (juegoObj) => {
   }
 
   if (esCartaDeHabilidad(carta)) {
-    juegoObj.mensaje = `Me acabo de encontrar una nueva habilidad`
+    juegoObj.mensaje = `Me acabo de encontrar una nueva habilidad <carta> <tipo>`.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta))
     juegoObj.mano = [...juegoObj.mano].concat(carta)
     return juegoObj
   }
