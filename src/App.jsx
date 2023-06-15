@@ -80,7 +80,7 @@ function App() {
     setMensaje(retornoObj.mensaje)
     if (retornoObj.pasarCartaAlTurno) handlePasarCartaAlTurno(retornoObj.carta)
     if (retornoObj.recogerTesoro) handleRecogerTesoro()
-    if (retornoObj.esVictoria) confetti()
+    if (retornoObj.victoria) confetti()
     if (retornoObj.continuarTurno) handleContinuarTurno()
     if (retornoObj.terminarTurno) handleTerminarTurno()
   }

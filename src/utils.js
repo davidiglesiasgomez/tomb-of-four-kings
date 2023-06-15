@@ -270,7 +270,7 @@ export const jugar = (juegoObj) => {
   juegoObj.pasarCartaAlTurno = false
   juegoObj.recogerTesoro = false
   juegoObj.fin = false
-  juegoObj.esVictoria = false
+  juegoObj.victoria = false
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.favorDivino === true) {
     juegoObj.recogerTesoro = true
@@ -333,7 +333,7 @@ export const jugar = (juegoObj) => {
 
   if (juegoObj.retornar !== undefined && juegoObj.retornar>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retornar - 1) {
     juegoObj.fin = true
-    juegoObj.esVictoria = true
+    juegoObj.victoria = true
     juegoObj.mensaje = `Has regresado a la entrada de la tumba. Has ganado`
     return juegoObj
   }
