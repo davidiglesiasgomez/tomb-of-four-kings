@@ -144,14 +144,14 @@ export const barajaInicial = () => {
   '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
 }
 
-export const marcarRetorno = (turnos, contador, encuentro, desafio, accion) => {
+export const marcarRetorno = (turnos, contador, encuentro, accion) => {
   if (contador <= 1) {
     return {
       retornar: 0,
       mensaje: `No puedes retornar porque acabas de empezar`
     }
   }
-  if (turnos[contador] && turnos[contador].length !== 0 || encuentro !== '' || desafio !== 0 || accion !== 0) {
+  if (turnos[contador] && turnos[contador].length !== 0 || encuentro !== '' || accion !== '') {
     return {
       retornar: 0,
       mensaje: `No puedes retornar porque estás en medio de un turno`
@@ -163,8 +163,8 @@ export const marcarRetorno = (turnos, contador, encuentro, desafio, accion) => {
   }
 }
 
-export const sacarCarta = (carta, encuentro, desafio) => {
-  if (carta === 'J♠' && encuentro.includes('monstruo')) {
+export const sacarCarta = (carta, encuentro) => {
+  if (carta === 'J♠' && esCartaDeMonstruo(encuentro)) {
     return {
       mensaje: `Mato al monstruo con mi habilidad especial de volverse berseker`,
       quitarCartaDeMano: true,
@@ -174,7 +174,7 @@ export const sacarCarta = (carta, encuentro, desafio) => {
       terminarTurno: true
     }
   }
-  if (carta === 'J♦' && encuentro.includes('trampa')) {
+  if (carta === 'J♦' && esCartaDeTrampa(encuentro)) {
     return {
       mensaje: `Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos`,
       quitarCartaDeMano: true,
@@ -184,7 +184,7 @@ export const sacarCarta = (carta, encuentro, desafio) => {
       terminarTurno: true
     }
   }
-  if (carta === 'J♣' && encuentro.includes('puerta cerrada')) {
+  if (carta === 'J♣' && esCartaDePuerta(encuentro)) {
     return {
       mensaje: `Abro la puerta con mi habilidad especial de abrir cerraduras`,
       quitarCartaDeMano: true,
@@ -194,7 +194,7 @@ export const sacarCarta = (carta, encuentro, desafio) => {
       terminarTurno: true
     }
   }
-  if (carta === 'J♥' && (encuentro.includes('monstruo') || encuentro.includes('trampa'))) {
+  if (carta === 'J♥' && (esCartaDeMonstruo(encuentro) || esCartaDeTrampa(encuentro))) {
     return {
       mensaje: `No me hago daño con mi habilidad especial de esquivar golpe`,
       quitarCartaDeMano: true,
@@ -204,7 +204,7 @@ export const sacarCarta = (carta, encuentro, desafio) => {
       terminarTurno: false
     }
   }
-  if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && encuentro.includes('monstruo') && desafio<valorCarta(carta)) {
+  if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && esCartaDeMonstruo(encuentro) && numeroCarta(encuentro)<valorCarta(carta)) {
     return {
       mensaje: `Tiro una carta de valor (${carta}) para distraer al monstruo`,
       quitarCartaDeMano: true,
