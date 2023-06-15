@@ -291,6 +291,11 @@ export const jugar = (juegoObj) => {
     juegoObj.mensaje = `Ha aparecido el pergamino de luz`
   }
 
+  if (esCartaDeFavorDivino(carta)) {
+    juegoObj.mensaje = `La diosa me bendice con el favor divino`
+    juegoObj.esFavorDivino = true
+  }
+
   juegoObj.pasarCartaAlTurno = true
   juegoObj.esFin = false
   return juegoObj

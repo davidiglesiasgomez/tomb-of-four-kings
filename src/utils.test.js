@@ -248,4 +248,12 @@ describe('Tests para la funcion jugar', () => {
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.mensaje, `Ha aparecido el pergamino de luz`)
   })
+  it(`Si sale la carta de favor divino, se avisa y se anota`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['Q♥']
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.esFavorDivino, true)
+    assert.equal(expected.mensaje, `La diosa me bendice con el favor divino`)
+  })
 })
