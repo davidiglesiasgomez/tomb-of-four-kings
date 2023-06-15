@@ -236,27 +236,28 @@ export const recogerTesoro = (turno, mano) => {
 }
 
 export const jugar = (juegoObj) => {
+  juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
 
-  if (juegoObj.antorchas && juegoObj.antorchas.length === 5) {
+  if (juegoObj.antorchas !== undefined && juegoObj.antorchas.length === 5) {
     juegoObj.esFin = true
     juegoObj.mensaje = `La última antorcha se consumió. Has perdido`
     return juegoObj
   }
 
-  if (juegoObj.antorchas && juegoObj.antorchas.length === 4 && !juegoObj.antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
+  if (juegoObj.antorchas !== undefined && juegoObj.antorchas.length === 4 && !juegoObj.antorchas.some(antorcha => esCartaDePergaminoDeLuz(antorcha))) {
     juegoObj.esFin = true
     juegoObj.mensaje = `La última antorcha se consumió. Has perdido`
     return juegoObj
   }
 
-  if (juegoObj.puntosVida && juegoObj.puntosVida < 2) {
+  if (juegoObj.puntosVida !== undefined && juegoObj.puntosVida < 2) {
     juegoObj.esFin = true
     juegoObj.mensaje = `Has muerto. Has perdido`
     return juegoObj
   }
 
-  if (juegoObj.retorno && juegoObj.retorno>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retorno - 1) {
+  if (juegoObj.retorno !== undefined && juegoObj.retorno>1 && juegoObj.contador && juegoObj.contador === 2 * juegoObj.retorno - 1) {
     juegoObj.esFin = true
     juegoObj.esVictoria = true
     juegoObj.mensaje = `Has regresado a la entrada de la tumba. Has ganado`
@@ -277,9 +278,13 @@ export const jugar = (juegoObj) => {
   juegoObj.carta = carta
   juegoObj.baraja = temp
 
-  if (juegoObj.encuentro && juegoObj.encuentro !== '' && esCartaDeAccion(carta)) {
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeAccion(carta)) {
     juegoObj.mensaje = `Contrarresto`
     juegoObj.accion = carta
+  }
+
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro === '' && esCartaDeEncuentro(carta)) {
+    juegoObj.encuentro = carta
   }
 
   juegoObj.pasarCartaAlTurno = true

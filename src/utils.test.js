@@ -225,4 +225,20 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.encuentro, '2♠')
     assert.equal(expected.accion, '')
   })
+  it(`Si no hay un encuentro y no sale una carta de encuentro, no se anota el encuentro`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['A♥']
+    juegoObj.encuentro = ''
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.encuentro, '')
+  })
+  it(`Si no hay un encuentro y sale una carta de encuentro, se anota el encuentro`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['2♠']
+    juegoObj.encuentro = ''
+    let expected = jugar(juegoObj)
+    assert.deepEqual(expected.baraja, [])
+    assert.equal(expected.encuentro, '2♠')
+  })
 })
