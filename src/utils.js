@@ -264,7 +264,11 @@ export const jugar = (juegoObj) => {
   juegoObj.mano = juegoObj.mano ?? []
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
+
+  juegoObj.terminarTurno = false
   juegoObj.pasarCartaAlTurno = false
+  juegoObj.recogerTesoro = false
+  juegoObj.esFin = false
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.esFavorDivino === true) {
     juegoObj.recogerTesoro = true
@@ -283,6 +287,27 @@ export const jugar = (juegoObj) => {
     juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias a mi acción` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias a mi acción` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias a mi acción` : juegoObj.mensaje )
+    return juegoObj
+  }
+
+  if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && juegoObj.accion !== undefined && juegoObj.accion !== '' && numeroCarta(juegoObj.encuentro)>numeroCarta(juegoObj.accion)) {
+    juegoObj.recogerTesoro = false
+    let diferencia = numeroCarta(juegoObj.encuentro) - numeroCarta(juegoObj.accion)
+    if (esCartaDeMonstruo(juegoObj.encuentro)) {
+      juegoObj.terminarTurno = false
+      juegoObj.puntosVida = juegoObj.puntosVida - diferencia
+      juegoObj.mensaje = `El monstruo me atacó y perdí ${diferencia} puntos de vida`
+    } else if (esCartaDeTrampa(juegoObj.encuentro)) {
+      juegoObj.terminarTurno = true
+      juegoObj.puntosVida = juegoObj.puntosVida - diferencia
+      juegoObj.mensaje = `Se activó la trampa y perdí ${diferencia} puntos de vida`
+    } else if (esCartaDePuerta(juegoObj.encuentro)) {
+      juegoObj.terminarTurno = true
+      let retornoDescartarCartasObj = descartarCartas(juegoObj.baraja, juegoObj.antorchas, diferencia)
+      juegoObj.baraja = retornoDescartarCartasObj.baraja
+      juegoObj.antorchas = retornoDescartarCartasObj.antorchas
+      juegoObj.mensaje = `No pude abrir la puerta. Se descartan ${diferencia} cartas`
+    }
     return juegoObj
   }
 
@@ -348,7 +373,7 @@ export const jugar = (juegoObj) => {
 
   if (esCartaDeHabilidad(carta)) {
     juegoObj.mensaje = `Me acabo de encontrar una nueva habilidad`
-    juegoObj.pasarCartaALaMano = true
+    juegoObj.mano = [...juegoObj.mano].concat(carta)
     return juegoObj
   }
 
@@ -373,6 +398,5 @@ export const jugar = (juegoObj) => {
   }
 
   juegoObj.pasarCartaAlTurno = true
-  juegoObj.esFin = false
   return juegoObj
 }

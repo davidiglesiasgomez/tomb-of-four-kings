@@ -266,9 +266,10 @@ describe('Tests para la funcion jugar', () => {
   it(`Si sale una carta de habilidad, se avisa y se pasa a la mano`, () => {
     let juegoObj = {}
     juegoObj.baraja = ['J♥']
+    juegoObj.mano = []
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
-    assert.equal(expected.pasarCartaALaMano, true)
+    assert.deepEqual(expected.mano, ['J♥'])
     assert.equal(expected.pasarCartaAlTurno, false)
     assert.equal(expected.mensaje, `Me acabo de encontrar una nueva habilidad`)
   })
@@ -360,5 +361,57 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.terminarTurno, true)
     assert.match(expected.mensaje, /puerta/)
     assert.match(expected.mensaje, /acción/)
+  })
+  it(`Si hay encuentro de monstruo y la accion es menor, se pierden puntos de vida y continua el turno`, () => {
+    let juegoObj = {}
+    juegoObj.encuentro = '4♠'
+    juegoObj.accion = '2♠'
+    juegoObj.puntosVida = 10
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, false)
+    assert.equal(expected.terminarTurno, false)
+    assert.equal(expected.puntosVida, 8)
+    assert.match(expected.mensaje, /monstruo/)
+    assert.match(expected.mensaje, /puntos de vida/)
+  })
+  it(`Si hay encuentro de trampa y la accion es menor, se pierden puntos de vida y se termina el turno`, () => {
+    let juegoObj = {}
+    juegoObj.encuentro = '4♦'
+    juegoObj.accion = '2♦'
+    juegoObj.puntosVida = 10
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, false)
+    assert.equal(expected.terminarTurno, true)
+    assert.equal(expected.puntosVida, 8)
+    assert.match(expected.mensaje, /trampa/)
+    assert.match(expected.mensaje, /puntos de vida/)
+  })
+  it(`Si hay encuentro de puerta y la accion es menor, se descartan cartas y se termina el turno`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['2♥', '3♥', '4♥', '5♥']
+    juegoObj.encuentro = '4♣'
+    juegoObj.accion = '2♣'
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, false)
+    assert.equal(expected.terminarTurno, true)
+    assert.equal(expected.baraja.length, 2)
+    assert.deepEqual(expected.baraja, ['4♥', '5♥'])
+    assert.deepEqual(expected.antorchas, [])
+    assert.match(expected.mensaje, /puerta/)
+    assert.match(expected.mensaje, /cartas/)
+  })
+  it(`Si hay encuentro de puerta y la accion es menor, se descartan cartas y se termina el turno, pero si hay una antorcha, se pasa a las antorchas`, () => {
+    let juegoObj = {}
+    juegoObj.baraja = ['2♥', 'A♥', '4♥', '5♥']
+    juegoObj.encuentro = '4♣'
+    juegoObj.accion = '2♣'
+    let expected = jugar(juegoObj)
+    assert.equal(expected.recogerTesoro, false)
+    assert.equal(expected.terminarTurno, true)
+    assert.equal(expected.baraja.length, 2)
+    assert.deepEqual(expected.baraja, ['4♥', '5♥'])
+    assert.deepEqual(expected.antorchas, ['A♥'])
+    assert.match(expected.mensaje, /puerta/)
+    assert.match(expected.mensaje, /cartas/)
   })
 })
