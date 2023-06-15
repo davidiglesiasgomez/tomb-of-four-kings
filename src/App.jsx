@@ -75,7 +75,7 @@ function App() {
     setUltimaCarta(retornoObj.carta)
     setFavorDivino(retornoObj.favorDivino)
     setPuntosVida(retornoObj.puntosVida)
-    setRetornar(retornoObj.retonar)
+    setRetornar(retornoObj.retornar)
     setFin(retornoObj.fin)
     setMensaje(retornoObj.mensaje)
     if (retornoObj.pasarCartaAlTurno) handlePasarCartaAlTurno(retornoObj.carta)
@@ -102,7 +102,7 @@ function App() {
   const handleRetornar = () => {
     let retornoObj = marcarRetorno(turnos, contador, encuentro, accion)
     setMensaje(retornoObj.mensaje)
-    setRetornar(retornoObj.contador)
+    setRetornar(retornoObj.retornar)
   }
 
   const handleResetear = () => {
