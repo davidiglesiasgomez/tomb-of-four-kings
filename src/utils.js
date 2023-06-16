@@ -247,15 +247,15 @@ export const descartarCartas = (baraja, antorchas, numero_de_cartas) => {
   }
 }
 
-export const recogerTesoro = (turno, mano) => {
+export const recogerTesoro = (juegoObj) => {
+  let turno = juegoObj.turnos[juegoObj.contador] ?? []
   let tesoros = turno.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
   if (tesoros.length === turno.length) {
     let descarte = [...tesoros].sort((a, b) => valorCarta(a) - valorCarta(b)).shift()
     tesoros = tesoros.filter(tesoro => tesoro !== descarte)
   }
-  return {
-    mano: mano.concat(tesoros)
-  }
+  juegoObj.mano = juegoObj.mano.concat(tesoros)
+  return juegoObj
 }
 
 export const jugar = (juegoObj) => {

@@ -93,27 +93,71 @@ describe('Tests para la funcion valorCarta', () => {
 
 describe('Tests para la funcion recogerTesoro', () => {
   it(`Si el turno no tiene nada, devuelve vacio`, () => {
-    assert.deepEqual(recogerTesoro([], []), {mano: []})
+    let juegoObj = {}
+    juegoObj.turnos = [[]]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
   })
   it(`Si el turno no tiene tesoros que recoger, devuelve vacio`, () => {
-    assert.deepEqual(recogerTesoro(['A♥'], []), {mano: []})
-    assert.deepEqual(recogerTesoro(['2♠', '8♠', '9♠', '4♣', '5♣', '6♣', '9♣', '10♣'], []), {mano: []})
-    assert.deepEqual(recogerTesoro(['A♥', 'A♠', 'A♦', 'A♣', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣'], []), {mano: []})
+    let juegoObj = {}
+    juegoObj.turnos = [['A♥']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
+    juegoObj.turnos = [['2♠', '8♠', '9♠', '4♣', '5♣', '6♣', '9♣', '10♣']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
+    juegoObj.turnos = [['A♥', 'A♠', 'A♦', 'A♣', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
   })
   it(`Si el turno solo tiene una carta y es un tesoro, devuelve vacio`, () => {
-    assert.deepEqual(recogerTesoro(['2♦'], []), {mano: []})
-    assert.deepEqual(recogerTesoro(['7♦'], []), {mano: []})
-    assert.deepEqual(recogerTesoro(['10♦'], []), {mano: []})
-    assert.deepEqual(recogerTesoro(['K♦'], []), {mano: []})
-    assert.deepEqual(recogerTesoro(['Jk'], []), {mano: []})
+    let juegoObj = {}
+    juegoObj.turnos = [['2♦']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
+    juegoObj.turnos = [['7♦']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
+    juegoObj.turnos = [['10♦']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
+    juegoObj.turnos = [['K♦']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
+    juegoObj.turnos = [['Jk']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, [])
   })
   it(`Si el turno solo tiene cartas de tesoro, tiene que descartar la de menor valor y devolver el resto`, () => {
-    assert.deepEqual(recogerTesoro(['7♦', '2♦', 'Jk'], []), {mano: ['7♦', 'Jk']})
-    assert.deepEqual(recogerTesoro(['2♦', 'Jk', '7♦'], []), {mano: ['Jk', '7♦']})
+    let juegoObj = {}
+    juegoObj.turnos = [['7♦', '2♦', 'Jk']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, ['7♦', 'Jk'])
+    juegoObj.turnos = [['2♦', 'Jk', '7♦']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, ['Jk', '7♦'])
   })
   it(`Si el turno tiene una o más cartas que no sean tesoro, descartarlas`, () => {
-    assert.deepEqual(recogerTesoro(['A♣', '2♠', '7♦', '2♦', 'Jk'], []), {mano: ['7♦', '2♦', 'Jk']})
-    assert.deepEqual(recogerTesoro(['2♦', 'Jk', 'A♣', '2♠', '7♦'], []), {mano: ['2♦', 'Jk', '7♦']})
+    let juegoObj = {}
+    juegoObj.turnos = [['A♣', '2♠', '7♦', '2♦', 'Jk']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, ['7♦', '2♦', 'Jk'])
+    juegoObj.turnos = [['2♦', 'Jk', 'A♣', '2♠', '7♦']]
+    juegoObj.contador = 0
+    juegoObj.mano = []
+    assert.deepEqual(recogerTesoro(juegoObj).mano, ['2♦', 'Jk', '7♦'])
   })
 })
 
