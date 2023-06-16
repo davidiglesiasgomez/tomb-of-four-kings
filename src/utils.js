@@ -224,15 +224,17 @@ export const sacarCarta = (carta, encuentro) => {
   }
 }
 
-export const pasarCartaAlTurno = (turnos, contador, carta) => {
-  let temp = [...turnos]
-  if (typeof temp[contador] === 'undefined') {
-    temp[contador] = []
+export const pasarCartaAlTurno = (juegoObj, carta) => {
+  if (carta === undefined || carta === '') {
+    return juegoObj
   }
-  temp[contador].push(carta)
-  return {
-    turnos: temp
+  let temp = [...juegoObj.turnos]
+  if (typeof temp[juegoObj.contador] === 'undefined') {
+    temp[juegoObj.contador] = []
   }
+  temp[juegoObj.contador].push(carta)
+  juegoObj.turnos = temp
+  return juegoObj
 }
 
 export const descartarCartas = (juegoObj, numero_de_cartas) => {

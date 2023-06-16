@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -528,5 +528,34 @@ describe('Tests para la funcion descartarCartas', () => {
     assert.deepEqual(retornoObj.baraja, ['4♥', 'K♥'])
     assert.deepEqual(retornoObj.antorchas, ['A♦', 'A♥'])
     assert.deepEqual(retornoObj.descartadas, ['10♥', '2♥', '3♥'])
+  })
+})
+
+describe('Tests para la funcion pasarCartaAlTurno', () => {
+  let juegoObj = {}
+  // let retornoObj = {}
+  it(`Si no se indica carta, se devuelve lo mismo`, () => {
+    juegoObj.turnos = []
+    assert.deepEqual(pasarCartaAlTurno(juegoObj).turnos, [])
+    juegoObj.turnos = [[]]
+    assert.deepEqual(pasarCartaAlTurno(juegoObj).turnos, [[]])
+    juegoObj.turnos = [['A♥', '2♥'], ['3♥', '4♥']]
+    assert.deepEqual(pasarCartaAlTurno(juegoObj).turnos, [['A♥', '2♥'], ['3♥', '4♥']])
+  })
+  it(`Si se indica carta, se tiene que insertar en el turno en curso`, () => {
+    juegoObj.turnos = [['A♥']]
+    juegoObj.contador = 0
+    assert.deepEqual(pasarCartaAlTurno(juegoObj, 'K♥').turnos, [['A♥', 'K♥']])
+    juegoObj.turnos = [['A♥', '2♥'], ['3♥', '4♥']]
+    juegoObj.contador = 1
+    assert.deepEqual(pasarCartaAlTurno(juegoObj, 'K♥').turnos, [['A♥', '2♥'], ['3♥', '4♥', 'K♥']])
+  })
+  it(`Si se indica carta, se tiene que insertar en el turno en curso y si no hay turno, inicializarlo`, () => {
+    juegoObj.turnos = []
+    juegoObj.contador = 0
+    assert.deepEqual(pasarCartaAlTurno(juegoObj, 'K♥').turnos, [['K♥']])
+    juegoObj.turnos = [['A♥', '2♥']]
+    juegoObj.contador = 1
+    assert.deepEqual(pasarCartaAlTurno(juegoObj, 'K♥').turnos, [['A♥', '2♥'], ['K♥']])
   })
 })
