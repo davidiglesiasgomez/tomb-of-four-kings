@@ -533,7 +533,6 @@ describe('Tests para la funcion descartarCartas', () => {
 
 describe('Tests para la funcion pasarCartaAlTurno', () => {
   let juegoObj = {}
-  // let retornoObj = {}
   it(`Si no se indica carta, se devuelve lo mismo`, () => {
     juegoObj.turnos = []
     assert.deepEqual(pasarCartaAlTurno(juegoObj).turnos, [])
@@ -557,5 +556,72 @@ describe('Tests para la funcion pasarCartaAlTurno', () => {
     juegoObj.turnos = [['A♥', '2♥']]
     juegoObj.contador = 1
     assert.deepEqual(pasarCartaAlTurno(juegoObj, 'K♥').turnos, [['A♥', '2♥'], ['K♥']])
+  })
+})
+
+export const marcarRetorno = (juegoObj) => {
+  juegoObj.turnos = juegoObj.turnos ?? []
+  juegoObj.contador = juegoObj.contador ?? 0
+  juegoObj.retornar = juegoObj.retornar ?? 0
+  juegoObj.encuentro = juegoObj.encuentro ?? ''
+  juegoObj.accion = juegoObj.accion ?? ''
+  juegoObj.mensaje = juegoObj.mensaje ?? ''
+  if (juegoObj.contador <= 1) {
+    juegoObj.retornar = 0
+    juegoObj.mensaje = `No puedes retornar porque acabas de empezar`
+    return juegoObj
+  }
+  if ((juegoObj.turnos && juegoObj.turnos[juegoObj.contador] && juegoObj.turnos[juegoObj.contador].length !== 0) || juegoObj.encuentro !== '' || juegoObj.accion !== '') {
+    juegoObj.retornar = 0
+    juegoObj.mensaje = `No puedes retornar porque estás en medio de un turno`
+    return juegoObj
+  }
+  juegoObj.retornar = juegoObj.contador
+  juegoObj.mensaje = `Empiezas el retorno`
+  return juegoObj
+}
+
+describe('Tests para la funcion marcarRetorno', () => {
+  let juegoObj = {}
+  let retornoObj = {}
+  it(`Se tiene que haber llegado por lo menos al turno 2`, () => {
+    juegoObj.contador = 0
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 0)
+    assert.match(retornoObj.mensaje, /No puedes retornar porque acabas de empezar/)
+    juegoObj.contador = 1
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 0)
+    assert.match(retornoObj.mensaje, /No puedes retornar porque acabas de empezar/)
+    juegoObj.contador = 2
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 2)
+    assert.match(retornoObj.mensaje, /Empiezas el retorno/)
+  })
+  it(`Para marcar el retorno, no se puede estar en medio de un turno`, () => {
+    juegoObj = {}
+    juegoObj.contador = 2
+    juegoObj.encuentro = 'A♥'
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 0)
+    assert.match(retornoObj.mensaje, /No puedes retornar porque estás en medio de un turno/)
+    juegoObj = {}
+    juegoObj.contador = 2
+    juegoObj.accion = 'A♥'
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 0)
+    assert.match(retornoObj.mensaje, /No puedes retornar porque estás en medio de un turno/)
+    juegoObj = {}
+    juegoObj.contador = 2
+    juegoObj.turnos = []
+    juegoObj.turnos[juegoObj.contador] = ['A♥']
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 0)
+    assert.match(retornoObj.mensaje, /No puedes retornar porque estás en medio de un turno/)
+    juegoObj = {}
+    juegoObj.contador = 2
+    retornoObj = marcarRetorno(juegoObj)
+    assert.equal(retornoObj.retornar, 2)
+    assert.match(retornoObj.mensaje, /Empiezas el retorno/)
   })
 })
