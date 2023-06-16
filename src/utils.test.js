@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro, jugar } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -459,5 +459,74 @@ describe('Tests para la funcion jugar', () => {
     assert.deepEqual(expected.antorchas, ['A♥'])
     assert.match(expected.mensaje, /puerta/)
     assert.match(expected.mensaje, /cartas/)
+  })
+})
+
+describe('Tests para la funcion descartarCartas', () => {
+  let juegoObj = {}
+  let retornoObj = {}
+  it(`Si se indican 0 cartas para descartar, se devuelve lo mismo`, () => {
+    juegoObj.baraja = []
+    juegoObj.antorchas = []
+    juegoObj.descartadas = []
+    retornoObj = descartarCartas(juegoObj, 0)
+    assert.deepEqual(retornoObj.baraja, [])
+    assert.deepEqual(retornoObj.antorchas, [])
+    assert.deepEqual(retornoObj.descartadas, [])
+    juegoObj.baraja = ['A♥', '2♥', '3♥', 'K♥']
+    juegoObj.antorchas = []
+    juegoObj.descartadas = []
+    retornoObj = descartarCartas(juegoObj, 0)
+    assert.deepEqual(retornoObj.baraja, ['A♥', '2♥', '3♥', 'K♥'])
+    assert.deepEqual(retornoObj.antorchas, [])
+    assert.deepEqual(retornoObj.descartadas, [])
+  })
+  it(`Si se indican varias cartas para descartar, pero baraja está vacía, se devuelve lo mismo`, () => {
+    juegoObj.baraja = []
+    juegoObj.antorchas = []
+    juegoObj.descartadas = []
+    retornoObj = descartarCartas(juegoObj, 3)
+    assert.deepEqual(retornoObj.baraja, [])
+    assert.deepEqual(retornoObj.antorchas, [])
+    assert.deepEqual(retornoObj.descartadas, [])
+    juegoObj.baraja = []
+    juegoObj.antorchas = []
+    juegoObj.descartadas = []
+    retornoObj = descartarCartas(juegoObj, 10)
+    assert.deepEqual(retornoObj.baraja, [])
+    assert.deepEqual(retornoObj.antorchas, [])
+    assert.deepEqual(retornoObj.descartadas, [])
+  })
+  it(`Se indican varias cartas para descartar y no hay antorchas en las descartadas`, () => {
+    juegoObj.baraja = ['2♥', '3♥', '4♥', 'K♥']
+    juegoObj.antorchas = ['A♥']
+    juegoObj.descartadas = ['10♥']
+    retornoObj = descartarCartas(juegoObj, 1)
+    assert.deepEqual(retornoObj.baraja, ['3♥', '4♥', 'K♥'])
+    assert.deepEqual(retornoObj.antorchas, ['A♥'])
+    assert.deepEqual(retornoObj.descartadas, ['10♥', '2♥'])
+    juegoObj.baraja = ['2♥', '3♥', '4♥', 'K♥']
+    juegoObj.antorchas = ['A♥']
+    juegoObj.descartadas = ['10♥']
+    retornoObj = descartarCartas(juegoObj, 3)
+    assert.deepEqual(retornoObj.baraja, ['K♥'])
+    assert.deepEqual(retornoObj.antorchas, ['A♥'])
+    assert.deepEqual(retornoObj.descartadas, ['10♥', '2♥', '3♥', '4♥'])
+  })
+  it(`Se indican varias cartas para descartar y hay antorchas en las descartadas, hay que pasarlas a las antorchas`, () => {
+    juegoObj.baraja = ['A♥', '2♥', '3♥', '4♥', 'K♥']
+    juegoObj.antorchas = ['A♦']
+    juegoObj.descartadas = ['10♥']
+    retornoObj = descartarCartas(juegoObj, 1)
+    assert.deepEqual(retornoObj.baraja, ['2♥', '3♥', '4♥', 'K♥'])
+    assert.deepEqual(retornoObj.antorchas, ['A♦', 'A♥'])
+    assert.deepEqual(retornoObj.descartadas, ['10♥'])
+    juegoObj.baraja = ['2♥', 'A♥', '3♥', '4♥', 'K♥']
+    juegoObj.antorchas = ['A♦']
+    juegoObj.descartadas = ['10♥']
+    retornoObj = descartarCartas(juegoObj, 3)
+    assert.deepEqual(retornoObj.baraja, ['4♥', 'K♥'])
+    assert.deepEqual(retornoObj.antorchas, ['A♦', 'A♥'])
+    assert.deepEqual(retornoObj.descartadas, ['10♥', '2♥', '3♥'])
   })
 })

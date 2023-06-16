@@ -235,16 +235,13 @@ export const pasarCartaAlTurno = (turnos, contador, carta) => {
   }
 }
 
-export const descartarCartas = (baraja, antorchas, numero_de_cartas) => {
-  let eliminadas = baraja.splice(0, numero_de_cartas)
-  let antorchas_eliminadas = eliminadas.filter(eliminado => esCartaDeAntorcha(eliminado))
-  let temp = [...antorchas]
-  antorchas_eliminadas.forEach(antorcha => temp.push(antorcha))
-  return {
-    baraja: baraja,
-    antorchas: temp,
-    eliminadas: eliminadas
-  }
+export const descartarCartas = (juegoObj, numero_de_cartas) => {
+  let cartas_eliminadas = juegoObj.baraja.splice(0, numero_de_cartas)
+  let antorchas_eliminadas = cartas_eliminadas.filter(eliminado => esCartaDeAntorcha(eliminado))
+  cartas_eliminadas = cartas_eliminadas.filter(eliminado => !esCartaDeAntorcha(eliminado))
+  juegoObj.descartadas = juegoObj.descartadas.concat(cartas_eliminadas)
+  juegoObj.antorchas = juegoObj.antorchas.concat(antorchas_eliminadas)
+  return juegoObj
 }
 
 export const recogerTesoro = (juegoObj) => {
@@ -262,6 +259,7 @@ export const jugar = (juegoObj) => {
   juegoObj.baraja = juegoObj.baraja ?? []
   juegoObj.antorchas = juegoObj.antorchas ?? []
   juegoObj.mano = juegoObj.mano ?? []
+  juegoObj.descartadas = juegoObj.descartadas ?? []
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
 
@@ -305,9 +303,7 @@ export const jugar = (juegoObj) => {
       juegoObj.mensaje = `Se activó la trampa y perdí ${diferencia} puntos de vida`
     } else if (esCartaDePuerta(juegoObj.encuentro)) {
       juegoObj.terminarTurno = true
-      let retornoDescartarCartasObj = descartarCartas(juegoObj.baraja, juegoObj.antorchas, diferencia)
-      juegoObj.baraja = retornoDescartarCartasObj.baraja
-      juegoObj.antorchas = retornoDescartarCartasObj.antorchas
+      juegoObj = descartarCartas(juegoObj, diferencia)
       juegoObj.mensaje = `No pude abrir la puerta. Se descartan ${diferencia} cartas`
     }
     return juegoObj
