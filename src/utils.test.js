@@ -603,3 +603,28 @@ describe('Tests para la funcion marcarRetorno', () => {
     assert.match(retornoObj.mensaje, /Empiezas el retorno/)
   })
 })
+
+const sacarCarta = (juegoObj, carta) => {
+  let retornoObj = juegoObj
+  retornoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta))
+  retornoObj.quitarCartaDeMano = false
+  retornoObj.pasarCartaAlTurno = false
+  retornoObj.recogerTesoro = false
+  retornoObj.resetearAccion = false
+  retornoObj.terminarTurno = false
+  return retornoObj
+}
+
+describe('Tests para la funcion sacarCarta', () => {
+  let juegoObj = {}
+  let retornoObj = {}
+  it(`Tiene que tener sentido sacar la carta`, () => {
+    juegoObj.encuentro = ''
+    retornoObj = sacarCarta(juegoObj, 'J♥')
+    assert.match(retornoObj.mensaje, /No tiene sentido usar la carta/)
+    assert.equal(retornoObj.quitarCartaDeMano, false)
+    assert.equal(retornoObj.pasarCartaAlTurno, false)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, false)  })
+})
