@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -558,28 +558,6 @@ describe('Tests para la funcion pasarCartaAlTurno', () => {
     assert.deepEqual(pasarCartaAlTurno(juegoObj, 'K♥').turnos, [['A♥', '2♥'], ['K♥']])
   })
 })
-
-export const marcarRetorno = (juegoObj) => {
-  juegoObj.turnos = juegoObj.turnos ?? []
-  juegoObj.contador = juegoObj.contador ?? 0
-  juegoObj.retornar = juegoObj.retornar ?? 0
-  juegoObj.encuentro = juegoObj.encuentro ?? ''
-  juegoObj.accion = juegoObj.accion ?? ''
-  juegoObj.mensaje = juegoObj.mensaje ?? ''
-  if (juegoObj.contador <= 1) {
-    juegoObj.retornar = 0
-    juegoObj.mensaje = `No puedes retornar porque acabas de empezar`
-    return juegoObj
-  }
-  if ((juegoObj.turnos && juegoObj.turnos[juegoObj.contador] && juegoObj.turnos[juegoObj.contador].length !== 0) || juegoObj.encuentro !== '' || juegoObj.accion !== '') {
-    juegoObj.retornar = 0
-    juegoObj.mensaje = `No puedes retornar porque estás en medio de un turno`
-    return juegoObj
-  }
-  juegoObj.retornar = juegoObj.contador
-  juegoObj.mensaje = `Empiezas el retorno`
-  return juegoObj
-}
 
 describe('Tests para la funcion marcarRetorno', () => {
   let juegoObj = {}

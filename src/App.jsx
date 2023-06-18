@@ -129,7 +129,22 @@ function App() {
   }
 
   const handleRetornar = () => {
-    let retornoObj = marcarRetorno(turnos, contador, encuentro, accion)
+
+    let juegoObj = {}
+    juegoObj.baraja = baraja
+    juegoObj.antorchas = antorchas
+    juegoObj.turnos = turnos
+    juegoObj.contador = contador
+    juegoObj.mano = mano
+    juegoObj.encuentro = encuentro
+    juegoObj.accion = accion
+    juegoObj.ultimaCarta = ultimaCarta
+    juegoObj.favorDivino = favorDivino
+    juegoObj.puntosVida = puntosVida
+    juegoObj.retornar = retornar
+    juegoObj.fin = fin
+
+    let retornoObj = marcarRetorno(juegoObj)
     setMensaje(retornoObj.mensaje)
     setRetornar(retornoObj.retornar)
   }

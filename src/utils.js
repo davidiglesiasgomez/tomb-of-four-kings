@@ -144,23 +144,26 @@ export const barajaInicial = () => {
   '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
 }
 
-export const marcarRetorno = (turnos, contador, encuentro, accion) => {
-  if (contador <= 1) {
-    return {
-      retornar: 0,
-      mensaje: `No puedes retornar porque acabas de empezar`
-    }
+export const marcarRetorno = (juegoObj) => {
+  juegoObj.turnos = juegoObj.turnos ?? []
+  juegoObj.contador = juegoObj.contador ?? 0
+  juegoObj.retornar = juegoObj.retornar ?? 0
+  juegoObj.encuentro = juegoObj.encuentro ?? ''
+  juegoObj.accion = juegoObj.accion ?? ''
+  juegoObj.mensaje = juegoObj.mensaje ?? ''
+  if (juegoObj.contador <= 1) {
+    juegoObj.retornar = 0
+    juegoObj.mensaje = `No puedes retornar porque acabas de empezar`
+    return juegoObj
   }
-  if (turnos[contador] && turnos[contador].length !== 0 || encuentro !== '' || accion !== '') {
-    return {
-      retornar: 0,
-      mensaje: `No puedes retornar porque estás en medio de un turno`
-    }
+  if ((juegoObj.turnos && juegoObj.turnos[juegoObj.contador] && juegoObj.turnos[juegoObj.contador].length !== 0) || juegoObj.encuentro !== '' || juegoObj.accion !== '') {
+    juegoObj.retornar = 0
+    juegoObj.mensaje = `No puedes retornar porque estás en medio de un turno`
+    return juegoObj
   }
-  return {
-    retornar: contador,
-    mensaje: `Empiezas el retorno`
-  }
+  juegoObj.retornar = juegoObj.contador
+  juegoObj.mensaje = `Empiezas el retorno`
+  return juegoObj
 }
 
 export const sacarCarta = (carta, encuentro) => {
