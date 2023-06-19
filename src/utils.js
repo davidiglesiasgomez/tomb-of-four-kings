@@ -132,16 +132,13 @@ export const shuffleArray = (array) => {
   return array
 }
 
-export const barajarBaraja = (baraja) => {
-  return baraja
-  // return shuffleArray(baraja)
-}
-
-export const barajaInicial = () => {
-  return ['5♦', '3♠', 'Q♣', 'J♠', '9♣', 'A♦', '3♣', '2♦', '4♦', '8♦',
-  '10♠', '9♠', 'K♠', 'A♥', '5♠', 'J♥', '3♦', 'K♦', '4♠', 'Jk', '6♦', '5♣', 'K♣',
-  'Q♠', '7♠', '2♠', '8♠', 'J♦', 'A♣', 'A♠', '8♣', 'Q♦', '6♠', '10♦', 'K♥', '6♣',
-  '9♦', '2♣', '7♣', '4♣', '10♣', 'J♣', '7♦', 'Q♥']
+export const generarBaraja = () => {
+  let baraja = ['Jk']
+  baraja.push('A♥', 'J♥', 'Q♥', 'K♥')
+  baraja.push('A♦', '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦', 'J♦', 'Q♦', 'K♦')
+  baraja.push('A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠')
+  baraja.push('A♣', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣', 'J♣', 'Q♣', 'K♣')
+  return shuffleArray(baraja)
 }
 
 export const marcarRetorno = (juegoObj) => {
@@ -420,7 +417,7 @@ export const terminarTurno = (juegoObj) => {
 
 export const resetearJuego = (baraja) => {
   let juegoObj = {}
-  juegoObj.baraja = baraja || barajarBaraja(barajaInicial())
+  juegoObj.baraja = baraja || generarBaraja()
   juegoObj.antorchas = []
   juegoObj.turnos = []
   juegoObj.contador = 0
