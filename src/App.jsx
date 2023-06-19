@@ -94,7 +94,6 @@ function App() {
 
     juegoObj = sacarCarta(juegoObj, carta)
     setMensaje(juegoObj.mensaje)
-    if (juegoObj.quitarCartaDeMano) setMano(mano => mano.filter(item => item !== carta))
     if (juegoObj.resetearAccion) setAccion('')
     if (juegoObj.terminarTurno) handleTerminarTurno()
   }
