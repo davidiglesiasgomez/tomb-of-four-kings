@@ -22,14 +22,6 @@ function App() {
   const [retornar, setRetornar] = useState(0)
   const [fin, setFin] = useState(false)
 
-  const handleTerminarTurno = () => {
-    setMensaje(mensaje => mensaje + `. Finaliza el turno...`)
-    setFavorDivino(false)
-    setContador(contador => contador + 1)
-    setEncuentro('')
-    setAccion('')
-  }
-
   const handleGame = () => {
     if (fin) {
       return
@@ -64,7 +56,6 @@ function App() {
     setFin(juegoObj.fin)
     setMensaje(juegoObj.mensaje)
     if (juegoObj.victoria) confetti()
-    if (juegoObj.terminarTurno) handleTerminarTurno()
   }
 
   const handleCarta = (carta) => {
@@ -88,11 +79,13 @@ function App() {
 
     juegoObj = sacarCarta(juegoObj, carta)
     setMensaje(juegoObj.mensaje)
-    if (juegoObj.terminarTurno) handleTerminarTurno()
+    setContador(juegoObj.contador)
+    setFavorDivino(juegoObj.favorDivino)
+    setEncuentro(juegoObj.encuentro)
+    setAccion(juegoObj.accion)
   }
 
   const handleRetornar = () => {
-
     let juegoObj = {}
     juegoObj.baraja = baraja
     juegoObj.antorchas = antorchas

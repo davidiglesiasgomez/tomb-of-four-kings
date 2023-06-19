@@ -168,31 +168,32 @@ export const marcarRetorno = (juegoObj) => {
 
 export const sacarCarta = (juegoObj, carta) => {
   juegoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta, true))
-  juegoObj.terminarTurno = false
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.mano = juegoObj.mano ?? []
+  juegoObj.turnos = juegoObj.turnos || []
+  juegoObj.contador = juegoObj.contador || 0
   if (carta === 'J♠' && esCartaDeMonstruo(juegoObj.encuentro)) {
     juegoObj.mensaje = 'Mato al monstruo con mi habilidad especial de volverse berseker'
-    juegoObj.terminarTurno = true
     juegoObj = pasarCartaAlTurno(juegoObj, carta)
     juegoObj = quitarCartaDeMano(juegoObj, carta)
     juegoObj = recogerTesoro(juegoObj)
+    juegoObj = terminarTurno(juegoObj)
     return juegoObj
   }
   if (carta === 'J♦' && esCartaDeTrampa(juegoObj.encuentro)) {
     juegoObj.mensaje = 'Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos'
-    juegoObj.terminarTurno = true
     juegoObj = pasarCartaAlTurno(juegoObj, carta)
     juegoObj = quitarCartaDeMano(juegoObj, carta)
     juegoObj = recogerTesoro(juegoObj)
+    juegoObj = terminarTurno(juegoObj)
     return juegoObj
   }
   if (carta === 'J♣' && esCartaDePuerta(juegoObj.encuentro)) {
     juegoObj.mensaje = 'Abro la puerta con mi habilidad especial de abrir cerraduras'
-    juegoObj.terminarTurno = true
     juegoObj = pasarCartaAlTurno(juegoObj, carta)
     juegoObj = quitarCartaDeMano(juegoObj, carta)
     juegoObj = recogerTesoro(juegoObj)
+    juegoObj = terminarTurno(juegoObj)
     return juegoObj
   }
   if (carta === 'J♥' && (esCartaDeMonstruo(juegoObj.encuentro) || esCartaDeTrampa(juegoObj.encuentro))) {
@@ -203,9 +204,9 @@ export const sacarCarta = (juegoObj, carta) => {
   }
   if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && esCartaDeMonstruo(juegoObj.encuentro) && numeroCarta(juegoObj.encuentro)<valorCarta(carta)) {
     juegoObj.mensaje = `Tiro una carta de valor (${carta}) para distraer al monstruo`
-    juegoObj.terminarTurno = true
     juegoObj = pasarCartaAlTurno(juegoObj, carta)
     juegoObj = quitarCartaDeMano(juegoObj, carta)
+    juegoObj = terminarTurno(juegoObj)
     return juegoObj
   }
   return juegoObj
@@ -255,28 +256,29 @@ export const jugar = (juegoObj) => {
   juegoObj.descartadas = juegoObj.descartadas ?? []
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
+  juegoObj.contador = juegoObj.contador || 0
+  juegoObj.favorDivino = juegoObj.favorDivino || false
 
-  juegoObj.terminarTurno = false
   juegoObj.fin = false
   juegoObj.victoria = false
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.favorDivino === true) {
-    juegoObj.terminarTurno = true
     juegoObj.mensaje = ''
     juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias al favor divino` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias al favor divino` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias al favor divino` : juegoObj.mensaje )
     juegoObj = recogerTesoro(juegoObj)
+    juegoObj = terminarTurno(juegoObj)
     return juegoObj
   }
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && juegoObj.accion !== undefined && juegoObj.accion !== '' && numeroCarta(juegoObj.encuentro)<=numeroCarta(juegoObj.accion)) {
-    juegoObj.terminarTurno = true
     juegoObj.mensaje = ''
     juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias a mi acción` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias a mi acción` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias a mi acción` : juegoObj.mensaje )
     juegoObj = recogerTesoro(juegoObj)
+    juegoObj = terminarTurno(juegoObj)
     return juegoObj
   }
 
@@ -287,13 +289,13 @@ export const jugar = (juegoObj) => {
       juegoObj.mensaje = `El monstruo me atacó y perdí ${diferencia} puntos de vida`
       juegoObj = continuarTurno(juegoObj)
     } else if (esCartaDeTrampa(juegoObj.encuentro)) {
-      juegoObj.terminarTurno = true
       juegoObj.puntosVida = juegoObj.puntosVida - diferencia
       juegoObj.mensaje = `Se activó la trampa y perdí ${diferencia} puntos de vida`
+      juegoObj = terminarTurno(juegoObj)
     } else if (esCartaDePuerta(juegoObj.encuentro)) {
-      juegoObj.terminarTurno = true
       juegoObj = descartarCartas(juegoObj, diferencia)
       juegoObj.mensaje = `No pude abrir la puerta. Se descartan ${diferencia} cartas`
+      juegoObj = terminarTurno(juegoObj)
     }
     return juegoObj
   }
@@ -403,6 +405,15 @@ export const quitarCartaDeMano = (juegoObj, carta) => {
 
 export const continuarTurno = (juegoObj) => {
   juegoObj.mensaje = juegoObj.mensaje + `. Continua el turno...`
+  juegoObj.accion = ''
+  return juegoObj
+}
+
+export const terminarTurno = (juegoObj) => {
+  juegoObj.mensaje = juegoObj.mensaje + `. Finaliza el turno...`
+  juegoObj.favorDivino = false
+  juegoObj.contador = juegoObj.contador + 1
+  juegoObj.encuentro = ''
   juegoObj.accion = ''
   return juegoObj
 }
