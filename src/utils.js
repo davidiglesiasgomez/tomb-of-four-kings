@@ -168,7 +168,6 @@ export const marcarRetorno = (juegoObj) => {
 
 export const sacarCarta = (juegoObj, carta) => {
   juegoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta, true))
-  juegoObj.resetearAccion = false
   juegoObj.terminarTurno = false
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.mano = juegoObj.mano ?? []
