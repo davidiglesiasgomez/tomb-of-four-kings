@@ -142,6 +142,9 @@ export const generarBaraja = () => {
 }
 
 export const marcarRetorno = (juegoObj) => {
+  if (juegoObj.fin) {
+    return juegoObj
+  }
   juegoObj.turnos = juegoObj.turnos || []
   juegoObj.contador = juegoObj.contador || 0
   juegoObj.retornar = juegoObj.retornar || 0
@@ -164,6 +167,9 @@ export const marcarRetorno = (juegoObj) => {
 }
 
 export const sacarCarta = (juegoObj, carta) => {
+  if (juegoObj.fin) {
+    return juegoObj
+  }
   juegoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta, true))
   juegoObj.encuentro = juegoObj.encuentro || ''
   juegoObj.mano = juegoObj.mano || []
@@ -247,6 +253,9 @@ export const recogerTesoro = (juegoObj) => {
 }
 
 export const jugar = (juegoObj) => {
+  if (juegoObj.fin) {
+    return juegoObj
+  }
   juegoObj.baraja = juegoObj.baraja || []
   juegoObj.antorchas = juegoObj.antorchas || []
   juegoObj.mano = juegoObj.mano || []

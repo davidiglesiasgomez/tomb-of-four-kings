@@ -11,20 +11,12 @@ function App() {
   const [juegoObj, setJuegoObj] = useState(resetearJuego())
 
   const handleGame = () => {
-    if (juegoObj.fin) {
-      return
-    }
-
     let retornoObj = jugar({...juegoObj})
     setJuegoObj({...retornoObj})
     if (retornoObj.victoria) confetti()
   }
 
   const handleCarta = (carta) => {
-    if (juegoObj.fin) {
-      return
-    }
-
     let retornoObj = sacarCarta({...juegoObj}, carta)
     setJuegoObj({...retornoObj})
   }
@@ -42,7 +34,7 @@ function App() {
   return (
     <>
       <h1 className="text-3xl font-bold underline">Tomb of Four Kings</h1>
-      <div className="game">
+      <div className="game w-96">
         <Antorchas antorchas={juegoObj.antorchas} />
         <Turnos turnos={juegoObj.turnos} contador={juegoObj.contador} retornar={juegoObj.retornar} />
         <Mano mano={juegoObj.mano} handleCarta={handleCarta} />
