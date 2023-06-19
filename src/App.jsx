@@ -119,7 +119,21 @@ function App() {
       return
     }
 
-    let retornoObj = sacarCarta(carta, encuentro)
+    let juegoObj = {}
+    juegoObj.baraja = baraja
+    juegoObj.antorchas = antorchas
+    juegoObj.turnos = turnos
+    juegoObj.contador = contador
+    juegoObj.mano = mano
+    juegoObj.encuentro = encuentro
+    juegoObj.accion = accion
+    juegoObj.ultimaCarta = ultimaCarta
+    juegoObj.favorDivino = favorDivino
+    juegoObj.puntosVida = puntosVida
+    juegoObj.retornar = retornar
+    juegoObj.fin = fin
+
+    let retornoObj = sacarCarta(juegoObj, carta)
     setMensaje(retornoObj.mensaje)
     if (retornoObj.quitarCartaDeMano) setMano(mano => mano.filter(item => item !== carta))
     if (retornoObj.pasarCartaAlTurno) handlePasarCartaAlTurno(carta)

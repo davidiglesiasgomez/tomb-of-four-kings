@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno, sacarCarta } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -604,17 +604,6 @@ describe('Tests para la funcion marcarRetorno', () => {
   })
 })
 
-const sacarCarta = (juegoObj, carta) => {
-  let retornoObj = juegoObj
-  retornoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta))
-  retornoObj.quitarCartaDeMano = false
-  retornoObj.pasarCartaAlTurno = false
-  retornoObj.recogerTesoro = false
-  retornoObj.resetearAccion = false
-  retornoObj.terminarTurno = false
-  return retornoObj
-}
-
 describe('Tests para la funcion sacarCarta', () => {
   let juegoObj = {}
   let retornoObj = {}
@@ -626,5 +615,98 @@ describe('Tests para la funcion sacarCarta', () => {
     assert.equal(retornoObj.pasarCartaAlTurno, false)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
-    assert.equal(retornoObj.terminarTurno, false)  })
+    assert.equal(retornoObj.terminarTurno, false)
+  })
+  it(`Si el encuentro es de monstruo y la carta es J♠`, () => {
+    juegoObj.encuentro = '2♠'
+    retornoObj = sacarCarta(juegoObj, 'J♠')
+    assert.match(retornoObj.mensaje, /Mato al monstruo con mi habilidad especial de volverse berseker/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, true)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, true)
+  })
+  it(`Si el encuentro es de trampa y la carta es J♦`, () => {
+    juegoObj.encuentro = '2♦'
+    retornoObj = sacarCarta(juegoObj, 'J♦')
+    assert.match(retornoObj.mensaje, /Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, true)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, true)
+  })
+  it(`Si el encuentro es de puerta y la carta es J♣`, () => {
+    juegoObj.encuentro = '2♣'
+    retornoObj = sacarCarta(juegoObj, 'J♣')
+    assert.match(retornoObj.mensaje, /Abro la puerta con mi habilidad especial de abrir cerraduras/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, true)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, true)
+  })
+  it(`Si el encuentro es de monstruo o de trampa y la carta es J♥`, () => {
+    juegoObj.encuentro = '2♠'
+    retornoObj = sacarCarta(juegoObj, 'J♥')
+    assert.match(retornoObj.mensaje, /No me hago daño con mi habilidad especial de esquivar golpe/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, false)
+    juegoObj.encuentro = '2♦'
+    retornoObj = sacarCarta(juegoObj, 'J♥')
+    assert.match(retornoObj.mensaje, /No me hago daño con mi habilidad especial de esquivar golpe/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, false)
+  })
+  it(`Si el encuentro es de monstruo y la carta es un tesoro o el pergamino de luz, y su valor mayor que el monstruo`, () => {
+    juegoObj.encuentro = '2♠'
+    retornoObj = sacarCarta(juegoObj, 'K♥')
+    assert.match(retornoObj.mensaje, /distraer al monstruo/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, true)
+    juegoObj.encuentro = '2♠'
+    retornoObj = sacarCarta(juegoObj, '3♦')
+    assert.match(retornoObj.mensaje, /distraer al monstruo/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, true)
+    juegoObj.encuentro = '2♠'
+    retornoObj = sacarCarta(juegoObj, 'Jk')
+    assert.match(retornoObj.mensaje, /distraer al monstruo/)
+    assert.equal(retornoObj.quitarCartaDeMano, true)
+    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, true)
+  })
+  it(`Si el encuentro es de monstruo y la carta es un tesoro o el pergamino de luz, y su valor menor que el monstruo`, () => {
+    juegoObj.encuentro = '3♠'
+    retornoObj = sacarCarta(juegoObj, '2♦')
+    assert.match(retornoObj.mensaje, /No tiene sentido usar la carta/)
+    assert.equal(retornoObj.quitarCartaDeMano, false)
+    assert.equal(retornoObj.pasarCartaAlTurno, false)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, false)
+    juegoObj.encuentro = '7♠'
+    retornoObj = sacarCarta(juegoObj, 'Jk')
+    assert.match(retornoObj.mensaje, /No tiene sentido usar la carta/)
+    assert.equal(retornoObj.quitarCartaDeMano, false)
+    assert.equal(retornoObj.pasarCartaAlTurno, false)
+    assert.equal(retornoObj.recogerTesoro, false)
+    assert.equal(retornoObj.resetearAccion, false)
+    assert.equal(retornoObj.terminarTurno, false)
+  })
 })
