@@ -170,32 +170,32 @@ export const sacarCarta = (juegoObj, carta) => {
   let retornoObj = juegoObj
   retornoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta, true))
   retornoObj.quitarCartaDeMano = false
-  retornoObj.recogerTesoro = false
   retornoObj.resetearAccion = false
   retornoObj.terminarTurno = false
   retornoObj.encuentro = retornoObj.encuentro ?? ''
+  retornoObj.mano = retornoObj.mano ?? []
   if (carta === 'J♠' && esCartaDeMonstruo(retornoObj.encuentro)) {
     retornoObj.mensaje = 'Mato al monstruo con mi habilidad especial de volverse berseker'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.recogerTesoro = true
     retornoObj.terminarTurno = true
     retornoObj = pasarCartaAlTurno(retornoObj, carta)
+    retornoObj = recogerTesoro(retornoObj)
     return retornoObj
   }
   if (carta === 'J♦' && esCartaDeTrampa(retornoObj.encuentro)) {
     retornoObj.mensaje = 'Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.recogerTesoro = true
     retornoObj.terminarTurno = true
     retornoObj = pasarCartaAlTurno(retornoObj, carta)
+    retornoObj = recogerTesoro(retornoObj)
     return retornoObj
   }
   if (carta === 'J♣' && esCartaDePuerta(retornoObj.encuentro)) {
     retornoObj.mensaje = 'Abro la puerta con mi habilidad especial de abrir cerraduras'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.recogerTesoro = true
     retornoObj.terminarTurno = true
     retornoObj = pasarCartaAlTurno(retornoObj, carta)
+    retornoObj = recogerTesoro(retornoObj)
     return retornoObj
   }
   if (carta === 'J♥' && (esCartaDeMonstruo(retornoObj.encuentro) || esCartaDeTrampa(retornoObj.encuentro))) {
@@ -239,6 +239,8 @@ export const descartarCartas = (juegoObj, numero_de_cartas) => {
 }
 
 export const recogerTesoro = (juegoObj) => {
+  juegoObj.turnos = juegoObj.turnos ?? []
+  juegoObj.mano = juegoObj.mano ?? []
   let turno = juegoObj.turnos[juegoObj.contador] ?? []
   let tesoros = turno.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
   if (tesoros.length === turno.length) {
@@ -259,32 +261,30 @@ export const jugar = (juegoObj) => {
 
   juegoObj.continuarTurno = false
   juegoObj.terminarTurno = false
-  juegoObj.recogerTesoro = false
   juegoObj.fin = false
   juegoObj.victoria = false
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && esCartaDeEncuentro(juegoObj.encuentro) && juegoObj.favorDivino === true) {
-    juegoObj.recogerTesoro = true
     juegoObj.terminarTurno = true
     juegoObj.mensaje = ''
     juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias al favor divino` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias al favor divino` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias al favor divino` : juegoObj.mensaje )
+    juegoObj = recogerTesoro(juegoObj)
     return juegoObj
   }
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && juegoObj.accion !== undefined && juegoObj.accion !== '' && numeroCarta(juegoObj.encuentro)<=numeroCarta(juegoObj.accion)) {
-    juegoObj.recogerTesoro = true
     juegoObj.terminarTurno = true
     juegoObj.mensaje = ''
     juegoObj.mensaje = ( esCartaDeMonstruo(juegoObj.encuentro) ? `Maté al monstruo gracias a mi acción` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDeTrampa(juegoObj.encuentro) ? `Evité la trampa gracias a mi acción` : juegoObj.mensaje )
     juegoObj.mensaje = ( esCartaDePuerta(juegoObj.encuentro) ? `Abrí la puerta gracias a mi acción` : juegoObj.mensaje )
+    juegoObj = recogerTesoro(juegoObj)
     return juegoObj
   }
 
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && juegoObj.accion !== undefined && juegoObj.accion !== '' && numeroCarta(juegoObj.encuentro)>numeroCarta(juegoObj.accion)) {
-    juegoObj.recogerTesoro = false
     let diferencia = numeroCarta(juegoObj.encuentro) - numeroCarta(juegoObj.accion)
     if (esCartaDeMonstruo(juegoObj.encuentro)) {
       juegoObj.continuarTurno = true

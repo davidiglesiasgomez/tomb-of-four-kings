@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { jugar, barajarBaraja, barajaInicial, marcarRetorno, sacarCarta, recogerTesoro } from './utils'
+import { jugar, barajarBaraja, barajaInicial, marcarRetorno, sacarCarta } from './utils'
 import './App.css'
 import { Antorchas } from './components/Antorchas'
 import { Turnos } from './components/Turnos'
@@ -35,25 +35,6 @@ function App() {
     setAccion('')
   }
 
-  const handleRecogerTesoro = () => {
-    let juegoObj = {}
-    juegoObj.baraja = baraja
-    juegoObj.antorchas = antorchas
-    juegoObj.turnos = turnos
-    juegoObj.contador = contador
-    juegoObj.mano = mano
-    juegoObj.encuentro = encuentro
-    juegoObj.accion = accion
-    juegoObj.ultimaCarta = ultimaCarta
-    juegoObj.favorDivino = favorDivino
-    juegoObj.puntosVida = puntosVida
-    juegoObj.retornar = retornar
-    juegoObj.fin = fin
-
-    let retornoObj = recogerTesoro(juegoObj)
-    setMano(retornoObj.mano)
-  }
-
   const handleGame = () => {
     if (fin) {
       return
@@ -87,7 +68,6 @@ function App() {
     setRetornar(retornoObj.retornar)
     setFin(retornoObj.fin)
     setMensaje(retornoObj.mensaje)
-    if (retornoObj.recogerTesoro) handleRecogerTesoro()
     if (retornoObj.victoria) confetti()
     if (retornoObj.continuarTurno) handleContinuarTurno()
     if (retornoObj.terminarTurno) handleTerminarTurno()
@@ -115,7 +95,6 @@ function App() {
     let retornoObj = sacarCarta(juegoObj, carta)
     setMensaje(retornoObj.mensaje)
     if (retornoObj.quitarCartaDeMano) setMano(mano => mano.filter(item => item !== carta))
-    if (retornoObj.recogerTesoro) handleRecogerTesoro()
     if (retornoObj.resetearAccion) setAccion('')
     if (retornoObj.terminarTurno) handleTerminarTurno()
   }
