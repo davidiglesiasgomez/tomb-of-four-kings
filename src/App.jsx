@@ -44,7 +44,7 @@ function App() {
       <h1 className="text-3xl font-bold underline">Tomb of Four Kings</h1>
       <div className="game">
         <Antorchas antorchas={juegoObj.antorchas} />
-        <Turnos turnos={juegoObj.turnos} retornar={juegoObj.retornar} />
+        <Turnos turnos={juegoObj.turnos} contador={juegoObj.contador} retornar={juegoObj.retornar} />
         <Mano mano={juegoObj.mano} handleCarta={handleCarta} />
         <Control handleGame={handleGame} handleRetornar={handleRetornar} handleResetear={handleResetear} ultimaCarta={juegoObj.ultimaCarta} mensaje={juegoObj.mensaje} puntosVida={juegoObj.puntosVida} />
       </div>
