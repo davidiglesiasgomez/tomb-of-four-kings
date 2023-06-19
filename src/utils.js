@@ -119,7 +119,7 @@ export const esCartaDeValor = (carta) => {
 
 export const puntosVidaCarta = (puntos) => {
   let cartas = ['', '', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥']
-  return cartas[puntos] ?? ''
+  return cartas[puntos] || ''
 }
 
 export const shuffleArray = (array) => {
@@ -145,12 +145,12 @@ export const barajaInicial = () => {
 }
 
 export const marcarRetorno = (juegoObj) => {
-  juegoObj.turnos = juegoObj.turnos ?? []
-  juegoObj.contador = juegoObj.contador ?? 0
-  juegoObj.retornar = juegoObj.retornar ?? 0
-  juegoObj.encuentro = juegoObj.encuentro ?? ''
-  juegoObj.accion = juegoObj.accion ?? ''
-  juegoObj.mensaje = juegoObj.mensaje ?? ''
+  juegoObj.turnos = juegoObj.turnos || []
+  juegoObj.contador = juegoObj.contador || 0
+  juegoObj.retornar = juegoObj.retornar || 0
+  juegoObj.encuentro = juegoObj.encuentro || ''
+  juegoObj.accion = juegoObj.accion || ''
+  juegoObj.mensaje = juegoObj.mensaje || ''
   if (juegoObj.contador <= 1) {
     juegoObj.retornar = 0
     juegoObj.mensaje = `No puedes retornar porque acabas de empezar`
@@ -168,8 +168,8 @@ export const marcarRetorno = (juegoObj) => {
 
 export const sacarCarta = (juegoObj, carta) => {
   juegoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta, true))
-  juegoObj.encuentro = juegoObj.encuentro ?? ''
-  juegoObj.mano = juegoObj.mano ?? []
+  juegoObj.encuentro = juegoObj.encuentro || ''
+  juegoObj.mano = juegoObj.mano || []
   juegoObj.turnos = juegoObj.turnos || []
   juegoObj.contador = juegoObj.contador || 0
   if (carta === 'J♠' && esCartaDeMonstruo(juegoObj.encuentro)) {
@@ -213,8 +213,8 @@ export const sacarCarta = (juegoObj, carta) => {
 }
 
 export const pasarCartaAlTurno = (juegoObj, carta) => {
-  juegoObj.turnos = juegoObj.turnos ?? []
-  juegoObj.contador = juegoObj.contador ?? 0
+  juegoObj.turnos = juegoObj.turnos || []
+  juegoObj.contador = juegoObj.contador || 0
   if (carta === undefined || carta === '') {
     return juegoObj
   }
@@ -237,9 +237,9 @@ export const descartarCartas = (juegoObj, numero_de_cartas) => {
 }
 
 export const recogerTesoro = (juegoObj) => {
-  juegoObj.turnos = juegoObj.turnos ?? []
-  juegoObj.mano = juegoObj.mano ?? []
-  let turno = juegoObj.turnos[juegoObj.contador] ?? []
+  juegoObj.turnos = juegoObj.turnos || []
+  juegoObj.mano = juegoObj.mano || []
+  let turno = juegoObj.turnos[juegoObj.contador] || []
   let tesoros = turno.filter(tesoro => esCartaDeTesoro(tesoro) || esCartaDePergaminoDeLuz(tesoro) || esCartaDeValor(tesoro))
   if (tesoros.length === turno.length) {
     let descarte = [...tesoros].sort((a, b) => valorCarta(a) - valorCarta(b)).shift()
@@ -250,12 +250,12 @@ export const recogerTesoro = (juegoObj) => {
 }
 
 export const jugar = (juegoObj) => {
-  juegoObj.baraja = juegoObj.baraja ?? []
-  juegoObj.antorchas = juegoObj.antorchas ?? []
-  juegoObj.mano = juegoObj.mano ?? []
-  juegoObj.descartadas = juegoObj.descartadas ?? []
-  juegoObj.encuentro = juegoObj.encuentro ?? ''
-  juegoObj.accion = juegoObj.accion ?? ''
+  juegoObj.baraja = juegoObj.baraja || []
+  juegoObj.antorchas = juegoObj.antorchas || []
+  juegoObj.mano = juegoObj.mano || []
+  juegoObj.descartadas = juegoObj.descartadas || []
+  juegoObj.encuentro = juegoObj.encuentro || ''
+  juegoObj.accion = juegoObj.accion || ''
   juegoObj.contador = juegoObj.contador || 0
   juegoObj.favorDivino = juegoObj.favorDivino || false
 
