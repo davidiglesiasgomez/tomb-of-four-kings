@@ -418,9 +418,9 @@ export const terminarTurno = (juegoObj) => {
   return juegoObj
 }
 
-export const resetearJuego = () => {
+export const resetearJuego = (baraja) => {
   let juegoObj = {}
-  juegoObj.baraja = barajarBaraja(barajaInicial())
+  juegoObj.baraja = baraja || barajarBaraja(barajaInicial())
   juegoObj.antorchas = []
   juegoObj.turnos = []
   juegoObj.contador = 0
