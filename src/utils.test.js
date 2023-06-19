@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno, sacarCarta } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno, sacarCarta, quitarCartaDeMano } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -716,5 +716,47 @@ describe('Tests para la funcion sacarCarta', () => {
     assert.deepEqual(juegoObj.mano, [])
     assert.equal(juegoObj.resetearAccion, false)
     assert.equal(juegoObj.terminarTurno, false)
+  })
+})
+
+describe('Tests para la funcion quitarCartaDeMano', () => {
+  let juegoObj = {}
+  it(`Si no se especifica carta, no se quita nada`, () => {
+    juegoObj = {}
+    juegoObj.mano = []
+    juegoObj = quitarCartaDeMano(juegoObj, '')
+    assert.deepEqual(juegoObj.mano, [])
+    juegoObj = {}
+    juegoObj.mano = ['A♥', '2♥', '3♥', 'K♥', 'Jk']
+    juegoObj = quitarCartaDeMano(juegoObj, '')
+    assert.deepEqual(juegoObj.mano, ['A♥', '2♥', '3♥', 'K♥', 'Jk'])
+  })
+  it(`Si se especifica una carta que no está, no se quita`, () => {
+    juegoObj = {}
+    juegoObj.mano = []
+    juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
+    assert.deepEqual(juegoObj.mano, [])
+    juegoObj = {}
+    juegoObj.mano = ['2♥', '3♥', 'K♥', 'Jk']
+    juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
+    assert.deepEqual(juegoObj.mano, ['2♥', '3♥', 'K♥', 'Jk'])
+  })
+  it(`Si se especifica carta que si está, se quita`, () => {
+    juegoObj = {}
+    juegoObj.mano = ['A♥']
+    juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
+    assert.deepEqual(juegoObj.mano, [])
+    juegoObj = {}
+    juegoObj.mano = ['A♥', '2♥', '3♥', 'K♥', 'Jk']
+    juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
+    assert.deepEqual(juegoObj.mano, ['2♥', '3♥', 'K♥', 'Jk'])
+    juegoObj = {}
+    juegoObj.mano = ['2♥', '3♥', 'A♥', 'K♥', 'Jk']
+    juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
+    assert.deepEqual(juegoObj.mano, ['2♥', '3♥', 'K♥', 'Jk'])
+    juegoObj = {}
+    juegoObj.mano = ['2♥', '3♥', 'K♥', 'Jk', 'A♥']
+    juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
+    assert.deepEqual(juegoObj.mano, ['2♥', '3♥', 'K♥', 'Jk'])
   })
 })

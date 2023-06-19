@@ -394,3 +394,12 @@ export const jugar = (juegoObj) => {
   juegoObj = pasarCartaAlTurno(juegoObj, carta)
   return juegoObj
 }
+
+export const quitarCartaDeMano = (juegoObj, carta) => {
+  carta = carta || ''
+  if (carta === '') {
+    return juegoObj
+  }
+  juegoObj.mano = juegoObj.mano.filter(item => item !== carta)
+  return juegoObj
+}
