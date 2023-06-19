@@ -256,7 +256,6 @@ export const jugar = (juegoObj) => {
   juegoObj.encuentro = juegoObj.encuentro ?? ''
   juegoObj.accion = juegoObj.accion ?? ''
 
-  juegoObj.continuarTurno = false
   juegoObj.terminarTurno = false
   juegoObj.fin = false
   juegoObj.victoria = false
@@ -284,9 +283,9 @@ export const jugar = (juegoObj) => {
   if (juegoObj.encuentro !== undefined && juegoObj.encuentro !== '' && juegoObj.accion !== undefined && juegoObj.accion !== '' && numeroCarta(juegoObj.encuentro)>numeroCarta(juegoObj.accion)) {
     let diferencia = numeroCarta(juegoObj.encuentro) - numeroCarta(juegoObj.accion)
     if (esCartaDeMonstruo(juegoObj.encuentro)) {
-      juegoObj.continuarTurno = true
       juegoObj.puntosVida = juegoObj.puntosVida - diferencia
       juegoObj.mensaje = `El monstruo me atacó y perdí ${diferencia} puntos de vida`
+      juegoObj = continuarTurno(juegoObj)
     } else if (esCartaDeTrampa(juegoObj.encuentro)) {
       juegoObj.terminarTurno = true
       juegoObj.puntosVida = juegoObj.puntosVida - diferencia
@@ -399,5 +398,11 @@ export const quitarCartaDeMano = (juegoObj, carta) => {
     return juegoObj
   }
   juegoObj.mano = juegoObj.mano.filter(item => item !== carta)
+  return juegoObj
+}
+
+export const continuarTurno = (juegoObj) => {
+  juegoObj.mensaje = juegoObj.mensaje + `. Continua el turno...`
+  juegoObj.accion = ''
   return juegoObj
 }

@@ -22,11 +22,6 @@ function App() {
   const [retornar, setRetornar] = useState(0)
   const [fin, setFin] = useState(false)
 
-  const handleContinuarTurno = () => {
-    setMensaje(mensaje => mensaje + `. Continua el turno...`)
-    setAccion('')
-  }
-
   const handleTerminarTurno = () => {
     setMensaje(mensaje => mensaje + `. Finaliza el turno...`)
     setFavorDivino(false)
@@ -69,7 +64,6 @@ function App() {
     setFin(juegoObj.fin)
     setMensaje(juegoObj.mensaje)
     if (juegoObj.victoria) confetti()
-    if (juegoObj.continuarTurno) handleContinuarTurno()
     if (juegoObj.terminarTurno) handleTerminarTurno()
   }
 

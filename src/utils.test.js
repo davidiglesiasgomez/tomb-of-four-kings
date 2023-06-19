@@ -414,11 +414,11 @@ describe('Tests para la funcion jugar', () => {
     juegoObj.puntosVida = 10
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.mano, []) // Revisar resultado que en algunos casos no es correcto por el orden
-    assert.equal(expected.continuarTurno, true)
     assert.equal(expected.terminarTurno, false)
     assert.equal(expected.puntosVida, 8)
     assert.match(expected.mensaje, /monstruo/)
     assert.match(expected.mensaje, /puntos de vida/)
+    assert.match(expected.mensaje, /Continua el turno/)
   })
   it(`Si hay encuentro de trampa y la accion es menor, se pierden puntos de vida y se termina el turno`, () => {
     let juegoObj = {}
