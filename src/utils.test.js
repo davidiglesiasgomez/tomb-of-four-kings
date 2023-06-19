@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
-import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno, sacarCarta, quitarCartaDeMano } from './utils.js'
+import { tipoCarta, valorCarta, recogerTesoro, jugar, descartarCartas, pasarCartaAlTurno, marcarRetorno, sacarCarta, quitarCartaDeMano, continuarTurno } from './utils.js'
 
 describe('Tests para la funcion tipoCarta', () => {
   it('Si la carta es Jk, Pergamino de luz', () => {
@@ -419,6 +419,7 @@ describe('Tests para la funcion jugar', () => {
     assert.match(expected.mensaje, /monstruo/)
     assert.match(expected.mensaje, /puntos de vida/)
     assert.match(expected.mensaje, /Continua el turno/)
+    assert.equal(expected.accion, '')
   })
   it(`Si hay encuentro de trampa y la accion es menor, se pierden puntos de vida y se termina el turno`, () => {
     let juegoObj = {}
@@ -747,5 +748,17 @@ describe('Tests para la funcion quitarCartaDeMano', () => {
     juegoObj.mano = ['2♥', '3♥', 'K♥', 'Jk', 'A♥']
     juegoObj = quitarCartaDeMano(juegoObj, 'A♥')
     assert.deepEqual(juegoObj.mano, ['2♥', '3♥', 'K♥', 'Jk'])
+  })
+})
+
+describe('Tests para la funcion continuarTurno', () => {
+  let juegoObj = {}
+  it(`Tiene que añadir la coletilla al mensaje y resetear la accion`, () => {
+    juegoObj = {}
+    juegoObj.mensaje = ''
+    juegoObj.accion = 'A♥'
+    juegoObj = continuarTurno(juegoObj)
+    assert.match(juegoObj.mensaje, /Continua el turno/)
+    assert.equal(juegoObj.accion, '')
   })
 })
