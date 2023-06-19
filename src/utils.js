@@ -417,3 +417,21 @@ export const terminarTurno = (juegoObj) => {
   juegoObj.accion = ''
   return juegoObj
 }
+
+export const resetearJuego = () => {
+  let juegoObj = {}
+  juegoObj.baraja = barajarBaraja(barajaInicial())
+  juegoObj.antorchas = []
+  juegoObj.turnos = []
+  juegoObj.contador = 0
+  juegoObj.mano = []
+  juegoObj.encuentro = ''
+  juegoObj.accion = ''
+  juegoObj.ultimaCarta = null
+  juegoObj.favorDivino = false
+  juegoObj.puntosVida = 10
+  juegoObj.mensaje = ''
+  juegoObj.retornar = 0
+  juegoObj.fin = false
+  return juegoObj
+}
