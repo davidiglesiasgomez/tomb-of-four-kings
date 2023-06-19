@@ -54,23 +54,23 @@ function App() {
     juegoObj.retornar = retornar
     juegoObj.fin = fin
 
-    let retornoObj = jugar(juegoObj)
-    setBaraja(retornoObj.baraja)
-    setAntorchas(retornoObj.antorchas)
-    setTurnos(retornoObj.turnos)
-    setContador(retornoObj.contador)
-    setMano(retornoObj.mano)
-    setEncuentro(retornoObj.encuentro)
-    setAccion(retornoObj.accion)
-    setUltimaCarta(retornoObj.carta)
-    setFavorDivino(retornoObj.favorDivino)
-    setPuntosVida(retornoObj.puntosVida)
-    setRetornar(retornoObj.retornar)
-    setFin(retornoObj.fin)
-    setMensaje(retornoObj.mensaje)
-    if (retornoObj.victoria) confetti()
-    if (retornoObj.continuarTurno) handleContinuarTurno()
-    if (retornoObj.terminarTurno) handleTerminarTurno()
+    juegoObj = jugar(juegoObj)
+    setBaraja(juegoObj.baraja)
+    setAntorchas(juegoObj.antorchas)
+    setTurnos(juegoObj.turnos)
+    setContador(juegoObj.contador)
+    setMano(juegoObj.mano)
+    setEncuentro(juegoObj.encuentro)
+    setAccion(juegoObj.accion)
+    setUltimaCarta(juegoObj.carta)
+    setFavorDivino(juegoObj.favorDivino)
+    setPuntosVida(juegoObj.puntosVida)
+    setRetornar(juegoObj.retornar)
+    setFin(juegoObj.fin)
+    setMensaje(juegoObj.mensaje)
+    if (juegoObj.victoria) confetti()
+    if (juegoObj.continuarTurno) handleContinuarTurno()
+    if (juegoObj.terminarTurno) handleTerminarTurno()
   }
 
   const handleCarta = (carta) => {
@@ -92,11 +92,11 @@ function App() {
     juegoObj.retornar = retornar
     juegoObj.fin = fin
 
-    let retornoObj = sacarCarta(juegoObj, carta)
-    setMensaje(retornoObj.mensaje)
-    if (retornoObj.quitarCartaDeMano) setMano(mano => mano.filter(item => item !== carta))
-    if (retornoObj.resetearAccion) setAccion('')
-    if (retornoObj.terminarTurno) handleTerminarTurno()
+    juegoObj = sacarCarta(juegoObj, carta)
+    setMensaje(juegoObj.mensaje)
+    if (juegoObj.quitarCartaDeMano) setMano(mano => mano.filter(item => item !== carta))
+    if (juegoObj.resetearAccion) setAccion('')
+    if (juegoObj.terminarTurno) handleTerminarTurno()
   }
 
   const handleRetornar = () => {
@@ -115,9 +115,9 @@ function App() {
     juegoObj.retornar = retornar
     juegoObj.fin = fin
 
-    let retornoObj = marcarRetorno(juegoObj)
-    setMensaje(retornoObj.mensaje)
-    setRetornar(retornoObj.retornar)
+    juegoObj = marcarRetorno(juegoObj)
+    setMensaje(juegoObj.mensaje)
+    setRetornar(juegoObj.retornar)
   }
 
   const handleResetear = () => {
