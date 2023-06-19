@@ -168,7 +168,7 @@ describe('Tests para la funcion jugar', () => {
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.carta, '')
-    assert.equal(expected.pasarCartaAlTurno, false)
+    assert.equal(expected.turnos, undefined)
   })
   it(`Se saca la siguiente carta del mazo. Si no pasa nada, se pasa la carta al turno y nada más`, () => {
     let juegoObj = {}
@@ -176,7 +176,7 @@ describe('Tests para la funcion jugar', () => {
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
     assert.equal(expected.carta, '2♥')
-    assert.equal(expected.pasarCartaAlTurno, true)
+    assert.equal(expected.turnos[expected.contador].includes('2♥'), true)
   })
   it(`Si hay 5 cartas en antorchas, se pierde`, () => {
     let juegoObj = {}
@@ -258,7 +258,7 @@ describe('Tests para la funcion jugar', () => {
     assert.equal(expected.accion, '3♠')
     assert.equal(expected.carta, '3♠')
     assert.match(expected.mensaje, /Contrarresto/)
-    assert.equal(expected.pasarCartaAlTurno, true)
+    assert.equal(expected.turnos[expected.contador].includes('3♠'), true)
     assert.equal(expected.fin, false)
   })
   it(`Si hay un encuentro y no sale una carta de acción, no se anota la acción`, () => {
@@ -315,7 +315,7 @@ describe('Tests para la funcion jugar', () => {
     let expected = jugar(juegoObj)
     assert.deepEqual(expected.baraja, [])
     assert.deepEqual(expected.mano, ['J♥'])
-    assert.equal(expected.pasarCartaAlTurno, false)
+    assert.equal(expected.turnos, undefined)
     assert.equal(expected.mensaje, `Me acabo de encontrar una nueva habilidad <carta> <tipo>`.replace('<carta>', 'J♥').replace('<tipo>', tipoCarta('J♥')))
   })
   it(`Si sale una carta de antorcha, y no es la última, se avisa y se pasa a las antorchas`, () => {
@@ -608,103 +608,114 @@ describe('Tests para la funcion sacarCarta', () => {
   let juegoObj = {}
   let retornoObj = {}
   it(`Tiene que tener sentido sacar la carta`, () => {
+    juegoObj = {}
     juegoObj.encuentro = ''
     retornoObj = sacarCarta(juegoObj, 'J♥')
     assert.match(retornoObj.mensaje, /No tiene sentido usar la carta/)
     assert.equal(retornoObj.quitarCartaDeMano, false)
-    assert.equal(retornoObj.pasarCartaAlTurno, false)
+    assert.equal(retornoObj.turnos, undefined)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, false)
   })
   it(`Si el encuentro es de monstruo y la carta es J♠`, () => {
+    juegoObj = {}
     juegoObj.encuentro = '2♠'
     retornoObj = sacarCarta(juegoObj, 'J♠')
     assert.match(retornoObj.mensaje, /Mato al monstruo con mi habilidad especial de volverse berseker/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('J♠'), true)
     assert.equal(retornoObj.recogerTesoro, true)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, true)
   })
   it(`Si el encuentro es de trampa y la carta es J♦`, () => {
+    juegoObj = {}
     juegoObj.encuentro = '2♦'
     retornoObj = sacarCarta(juegoObj, 'J♦')
     assert.match(retornoObj.mensaje, /Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('J♦'), true)
     assert.equal(retornoObj.recogerTesoro, true)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, true)
   })
   it(`Si el encuentro es de puerta y la carta es J♣`, () => {
+    juegoObj = {}
     juegoObj.encuentro = '2♣'
     retornoObj = sacarCarta(juegoObj, 'J♣')
     assert.match(retornoObj.mensaje, /Abro la puerta con mi habilidad especial de abrir cerraduras/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('J♣'), true)
     assert.equal(retornoObj.recogerTesoro, true)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, true)
   })
   it(`Si el encuentro es de monstruo o de trampa y la carta es J♥`, () => {
+    juegoObj = {}
     juegoObj.encuentro = '2♠'
     retornoObj = sacarCarta(juegoObj, 'J♥')
     assert.match(retornoObj.mensaje, /No me hago daño con mi habilidad especial de esquivar golpe/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('J♥'), true)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, false)
+    juegoObj = {}
     juegoObj.encuentro = '2♦'
     retornoObj = sacarCarta(juegoObj, 'J♥')
     assert.match(retornoObj.mensaje, /No me hago daño con mi habilidad especial de esquivar golpe/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('J♥'), true)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, false)
   })
   it(`Si el encuentro es de monstruo y la carta es un tesoro o el pergamino de luz, y su valor mayor que el monstruo`, () => {
+    juegoObj = {}
     juegoObj.encuentro = '2♠'
     retornoObj = sacarCarta(juegoObj, 'K♥')
     assert.match(retornoObj.mensaje, /distraer al monstruo/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('K♥'), true)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, true)
+    juegoObj = {}
     juegoObj.encuentro = '2♠'
     retornoObj = sacarCarta(juegoObj, '3♦')
     assert.match(retornoObj.mensaje, /distraer al monstruo/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('3♦'), true)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, true)
+    juegoObj = {}
     juegoObj.encuentro = '2♠'
     retornoObj = sacarCarta(juegoObj, 'Jk')
     assert.match(retornoObj.mensaje, /distraer al monstruo/)
     assert.equal(retornoObj.quitarCartaDeMano, true)
-    assert.equal(retornoObj.pasarCartaAlTurno, true)
+    assert.equal(retornoObj.turnos[retornoObj.contador].includes('Jk'), true)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, true)
   })
   it(`Si el encuentro es de monstruo y la carta es un tesoro o el pergamino de luz, y su valor menor que el monstruo`, () => {
+    juegoObj = {}
     juegoObj.encuentro = '3♠'
     retornoObj = sacarCarta(juegoObj, '2♦')
     assert.match(retornoObj.mensaje, /No tiene sentido usar la carta/)
     assert.equal(retornoObj.quitarCartaDeMano, false)
-    assert.equal(retornoObj.pasarCartaAlTurno, false)
+    assert.equal(retornoObj.turnos, undefined)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, false)
+    juegoObj = {}
     juegoObj.encuentro = '7♠'
     retornoObj = sacarCarta(juegoObj, 'Jk')
     assert.match(retornoObj.mensaje, /No tiene sentido usar la carta/)
     assert.equal(retornoObj.quitarCartaDeMano, false)
-    assert.equal(retornoObj.pasarCartaAlTurno, false)
+    assert.equal(retornoObj.turnos, undefined)
     assert.equal(retornoObj.recogerTesoro, false)
     assert.equal(retornoObj.resetearAccion, false)
     assert.equal(retornoObj.terminarTurno, false)

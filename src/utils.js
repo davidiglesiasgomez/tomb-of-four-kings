@@ -170,7 +170,6 @@ export const sacarCarta = (juegoObj, carta) => {
   let retornoObj = juegoObj
   retornoObj.mensaje = 'No tiene sentido usar la carta <carta> <tipo>'.replace('<carta>', carta).replace('<tipo>', tipoCarta(carta, true))
   retornoObj.quitarCartaDeMano = false
-  retornoObj.pasarCartaAlTurno = false
   retornoObj.recogerTesoro = false
   retornoObj.resetearAccion = false
   retornoObj.terminarTurno = false
@@ -178,44 +177,46 @@ export const sacarCarta = (juegoObj, carta) => {
   if (carta === 'J♠' && esCartaDeMonstruo(retornoObj.encuentro)) {
     retornoObj.mensaje = 'Mato al monstruo con mi habilidad especial de volverse berseker'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.pasarCartaAlTurno = true
     retornoObj.recogerTesoro = true
     retornoObj.terminarTurno = true
+    retornoObj = pasarCartaAlTurno(retornoObj, carta)
     return retornoObj
   }
   if (carta === 'J♦' && esCartaDeTrampa(retornoObj.encuentro)) {
     retornoObj.mensaje = 'Desactivo el mecanismo con mi habilidad especial de desactivar mecanismos'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.pasarCartaAlTurno = true
     retornoObj.recogerTesoro = true
     retornoObj.terminarTurno = true
+    retornoObj = pasarCartaAlTurno(retornoObj, carta)
     return retornoObj
   }
   if (carta === 'J♣' && esCartaDePuerta(retornoObj.encuentro)) {
     retornoObj.mensaje = 'Abro la puerta con mi habilidad especial de abrir cerraduras'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.pasarCartaAlTurno = true
     retornoObj.recogerTesoro = true
     retornoObj.terminarTurno = true
+    retornoObj = pasarCartaAlTurno(retornoObj, carta)
     return retornoObj
   }
   if (carta === 'J♥' && (esCartaDeMonstruo(retornoObj.encuentro) || esCartaDeTrampa(retornoObj.encuentro))) {
     retornoObj.mensaje = 'No me hago daño con mi habilidad especial de esquivar golpe'
     retornoObj.quitarCartaDeMano = true
-    retornoObj.pasarCartaAlTurno = true
+    retornoObj = pasarCartaAlTurno(retornoObj, carta)
     return retornoObj
   }
   if ((esCartaDeTesoro(carta) || esCartaDePergaminoDeLuz(carta) || esCartaDeValor(carta)) && esCartaDeMonstruo(retornoObj.encuentro) && numeroCarta(retornoObj.encuentro)<valorCarta(carta)) {
     retornoObj.mensaje = `Tiro una carta de valor (${carta}) para distraer al monstruo`
     retornoObj.quitarCartaDeMano = true
-    retornoObj.pasarCartaAlTurno = true
     retornoObj.terminarTurno = true
+    retornoObj = pasarCartaAlTurno(retornoObj, carta)
     return retornoObj
   }
   return retornoObj
 }
 
 export const pasarCartaAlTurno = (juegoObj, carta) => {
+  juegoObj.turnos = juegoObj.turnos ?? []
+  juegoObj.contador = juegoObj.contador ?? 0
   if (carta === undefined || carta === '') {
     return juegoObj
   }
@@ -258,7 +259,6 @@ export const jugar = (juegoObj) => {
 
   juegoObj.continuarTurno = false
   juegoObj.terminarTurno = false
-  juegoObj.pasarCartaAlTurno = false
   juegoObj.recogerTesoro = false
   juegoObj.fin = false
   juegoObj.victoria = false
@@ -392,6 +392,6 @@ export const jugar = (juegoObj) => {
     return juegoObj
   }
 
-  juegoObj.pasarCartaAlTurno = true
+  juegoObj = pasarCartaAlTurno(juegoObj, carta)
   return juegoObj
 }
